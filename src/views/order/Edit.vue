@@ -6,7 +6,7 @@
                     客戶名稱
                 </CCol >
                 <CCol sm="10">
-                    <b-form-select v-model="info.customer" :options="customer_opt" text-field="text" value-field="text" required >
+                    <b-form-select v-model="info.customer" :options="customer_opt" disabled text-field="text" value-field="value" required >
                         <!-- <template #first>
                             <b-form-select-option :value="null" disabled >- 請選擇 -</b-form-select-option >
                         </template> -->
@@ -87,7 +87,8 @@ import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
 export default {
     props:{
-        
+        order_id:Number,
+        customer_opt:Array,
     },
     data(){
         return{
@@ -100,13 +101,14 @@ export default {
                 quantity:"",  //數量
                 pre_delivery_data:"",  //預交日期
                 reply_date:"",  //回覆日
+                develop_id:"",  //開發者模式
             },
             customer_opt:[]
         }
     },
     created(){
-        this.getCustomerOpt()
         this.getData()
+        console.log(this.order_id)
     },
     components:{
         "date-picker":DatePicker,
@@ -114,7 +116,7 @@ export default {
     methods:{
         getData(){
             let data={
-                order_id :1 , 
+                order_id :this.order_id , 
             }
             this.$http.post("/getOrderData", data)
             .then((res) => {
@@ -128,15 +130,9 @@ export default {
                         this.info.quantity=res.data.data[0].quantity
                         this.info.pre_delivery_data=res.data.data[0].pre_delivery_data
                         this.info.reply_date=res.data.data[0].reply_date
+                        this.info.develop_id=res.data.data[0].develop_id
 
                    
-            })
-        },
-        getCustomerOpt(){
-            this.$http.get("/getCustomerOpt")
-            .then((res) => {
-                console.log(res)
-                this.customer_opt = res.data.options
             })
         },
         saveData(){
@@ -145,7 +141,7 @@ export default {
                 return ;
             }
             let data={
-                order_id :1 ,
+                order_id :this.order_id ,
                 customer:this.info.customer, 
                 order_num:this.info.order_num, 
                 order_date:this.info.order_date, 
@@ -154,8 +150,9 @@ export default {
                 quantity:this.info.quantity,  
                 pre_delivery_data:this.info.pre_delivery_data,
                 reply_date:this.info.reply_date,
+                develop_id:this.info.develop_id
             }
-            this.$http.post("/editorder", data)
+            this.$http.post("/saveOrderData", data)
             .then((res) => {
                 
                         this.$emit('saveEdit')

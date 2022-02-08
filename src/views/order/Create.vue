@@ -6,10 +6,10 @@
                     客戶名稱
                 </CCol >
                 <CCol sm="10">
-                    <b-form-select v-model="info.customer" :options="customer_opt" text-field="text" value-field="text" required >
-                        <!-- <template #first>
+                    <b-form-select v-model="info.customer" :options="customer_opt" text-field="text" value-field="value" required >
+                        <template #first>
                             <b-form-select-option :value="null" disabled >- 請選擇 -</b-form-select-option >
-                        </template> -->
+                        </template>
                     </b-form-select>
                 </CCol>
             </template>
@@ -20,7 +20,7 @@
                     採購單號
                 </CCol>
                 <CCol sm="3">
-                    <b-form-input type="text" v-model="info.order_num" placeholder="採購單號" required></b-form-input>
+                    <b-form-input type="number" v-model="info.order_num" placeholder="採購單號" required></b-form-input>
                 </CCol>
             </template>
             <template>
@@ -80,19 +80,23 @@
         <div class="text-right">
             <button type="submit">儲存</button>
         </div>
+        <notifications position="top left"/>
     </CForm>
 </template>
 <script>
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
+import Vue           from 'vue'
+import Notifications from 'vue-notification'
+Vue.use(Notifications)
 export default {
     props:{
-        
+        customer_opt:Array,
     },
     data(){
         return{
             info:{
-                customer:"", //客戶
+                customer:null, //客戶
                 order_num:"",  //採購單號
                 order_date:"",  //單據日期
                 item_num:"",  //品號
@@ -105,19 +109,13 @@ export default {
         }
     },
     created(){
-        this.getCustomerOpt()
+        
     },
     components:{
         "date-picker":DatePicker,
     },
     methods:{
-        getCustomerOpt(){
-            this.$http.get("/getCustomerOpt")
-            .then((res) => {
-                console.log(res)
-                this.customer_opt = res.data.options
-            })
-        },
+        
         saveData(){
             if(this.info.order_date==""||this.info.pre_delivery_data==""||this.info.reply_date==""){
                 alert('日期尚未填完')
@@ -135,8 +133,11 @@ export default {
             }
             this.$http.post("/addorder", data)
             .then((res) => {
-                
-                        this.$emit('saveCreate')
+                this.$notify({
+                    title: 'Important message',
+                    text: 'Hello user! This is a notification!'
+                });
+                this.$emit('saveCreate')
                    
             })
         },

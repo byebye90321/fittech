@@ -82,26 +82,20 @@
               </div>
             </template>
 
-            <template v-slot:cell(thumbnail)="row">
-              <img v-if="row.item.thumbnail!=''" :src="row.item.thumbnail" class="img-fluid" />
-              <p v-else class="text-secondary">無</p>
+            <template v-slot:cell(customer)="row">
+              <p>{{row.item.customer|customerFilter(customer_opt)}}</p>
             </template>
 
-            <template v-slot:cell(terms)="row">
-              <p :class="row.item.terms.length!=0?'':'text-secondary'">{{ row.item.terms | textFilter }}</p>
+            <template v-slot:cell(develop_id)="row">
+              <p>{{row.item.develop_id|developFilter(develop_opt)}}</p>
             </template>
 
-            <template v-slot:cell(is_top)="row">
-              <p v-if="row.item.is_top == 1">
-                <i
-                  class="fas fa-check-circle fa-lg text-danger"
-                  v-c-tooltip.hover="'結束日：' + row.item.top_end_date"
-                ></i>
-              </p>
-              <p v-else>
-                <i class="fas fa-times-circle fa-lg text-secondary"></i>
-              </p>
+       
+
+            <template v-slot:cell(reply_date)="row">
+              <p>{{row.item.reply_date|dateFilter}}</p>
             </template>
+
 
             <template v-slot:cell(status)="row">
               <span
@@ -122,8 +116,11 @@
                   <i class="las la-pencil-alt la-lg"></i>&nbsp;
                   <span class="sr-only">操作</span>
                 </template>
-                <b-dropdown-item @click="toEdit(row.item.posts_id)">
+                <b-dropdown-item @click="toEdit(row.item.order_id)">
                   <i class="las la-edit la-lg pr-2"></i> 編輯
+                </b-dropdown-item>
+                <b-dropdown-item v-if="row.item.develop_id==3" >
+                  <i class="las la-edit la-lg pr-2"></i> 變更開發模式
                 </b-dropdown-item>
                 <b-dropdown-item @click="checkDel(row.item.posts_id)" v-if="row.item.status==5">
                   <i class="las la-times-circle la-lg pr-2"></i> 刪除
@@ -153,13 +150,13 @@
 
     <b-modal id="modal-create" centered title="新增訂單" size="xl" v-model="createModal" hide-footer class="modal" >
         <b-col class="pt-3 pb-3">
-            <create @saveCreate="saveCreate"></create>
+            <create :customer_opt="customer_opt" @saveCreate="saveCreate"></create>
         </b-col>
     </b-modal>
 
     <b-modal id="modal-edit" centered title="編輯訂單" size="xl" v-model="editModal" hide-footer class="modal" >
         <b-col class="pt-3 pb-3">
-            <edit @saveEdit="saveEdit"></edit>
+            <edit :customer_opt="customer_opt" :order_id="editOrderId" @saveEdit="saveEdit"></edit>
         </b-col>
     </b-modal>
 
@@ -187,7 +184,7 @@
 
 <script>
 import Vue from 'vue'
-
+import moment from 'moment'
 
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
@@ -232,7 +229,7 @@ export default {
           sortable: true,
         },
         {
-          key: "mode",
+          key: "develop_id",
           label: "開發模式",
           sortable: true,
         },
@@ -278,9 +275,41 @@ export default {
 
       createModal:false,
       editModal:false,
+
+      editOrderId:"",
+
+      customer_opt:[],
+      develop_opt:[]
     };
   },
   filters: {
+    dateFilter:function(date){
+      return moment(date).format('YYYY-MM-DD').toString()
+    },
+    customerFilter:function(val,customer_opt){
+
+      for(var i=0;i<customer_opt.length;i++)
+      {
+        console.log(val)
+        if(customer_opt[i].value==val)
+        {
+
+          return customer_opt[i].text
+        }
+      }
+    },
+    developFilter:function(val,develop_opt){
+
+      for(var i=0;i<develop_opt.length;i++)
+      {
+        console.log(val)
+        if(develop_opt[i].value==val)
+        {
+
+          return develop_opt[i].text
+        }
+      }
+    },
     textFilter: function (value) {
       var t = "";
       if (value.length > 0) {
@@ -304,6 +333,8 @@ export default {
   },
   created() {
     this.getLists(1)
+    this.getCustomerOpt()
+    this.getDevelopOpt()
   },
   methods: {
     getLists(page){
@@ -332,6 +363,20 @@ export default {
         }
       })  
       
+    },
+    getCustomerOpt(){
+        this.$http.get("/getCustomerOpt")
+        .then((res) => {
+            console.log(res)
+            this.customer_opt = res.data.options
+        })
+    },
+    getDevelopOpt(){
+        this.$http.get("/getDevelopOpt")
+        .then((res) => {
+            console.log(res)
+            this.develop_opt = res.data.options
+        })
     },
     getStatusOpt() {
       let data = {};
@@ -362,6 +407,7 @@ export default {
     },
     toEdit(id) {
       this.editModal=true
+      this.editOrderId=id
       // console.log(this.type)
       // this.$router.push({
       //   name: "posts.edit",
@@ -374,7 +420,7 @@ export default {
       this.getLists(1);
     },
     saveEdit(){
-      this.createModal=false
+      this.editModal=false
       this.getLists(1);
     },
     checkDel(id){
