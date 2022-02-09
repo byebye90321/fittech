@@ -121,7 +121,7 @@
                   <i class="las la-edit la-lg pr-2"></i> 編輯
                 </b-dropdown-item>
                 <b-dropdown-item v-if="row.item.develop_id==3" @click="toDevelop(row.item.order_id)">
-                  <i class="las la-pencil-alt la-lg pr-2"></i> 變更開發模式
+                  <i class="las la-pencil-alt la-lg pr-2"></i> 設定開發模式
                 </b-dropdown-item>
                 <b-dropdown-item @click="checkDel(row.item.order_id)" >
                   <i class="las la-trash-alt la-lg pr-2"></i> 刪除
@@ -161,7 +161,7 @@
         </b-col>
     </b-modal>
 
-    <b-modal id="modal-develop" centered title="變更開發模式" size="xl" v-model="developModal" hide-footer class="modal" >
+    <b-modal id="modal-develop" centered title="設定開發模式" size="xl" v-model="developModal" hide-footer class="modal" >
         <b-col class="pt-3 pb-3">
             <develop :develop_opt="develop_opt" :order_id="developOrderId" @saveDevelop="saveDevelop"></develop>
         </b-col>
