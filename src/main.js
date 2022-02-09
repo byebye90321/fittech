@@ -19,9 +19,10 @@ Vue.prototype.webUrl = "https://demo.fastez.net"
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue)
 
+import Notifications from 'vue-notification'
+Vue.use(Notifications)
 
 const whiteList = ['/login','/snslogin'] // 路由白名单
-const vm =this
 
 router.beforeEach((to, from, next)=>{
   const isLogin = sessionStorage.getItem('token')

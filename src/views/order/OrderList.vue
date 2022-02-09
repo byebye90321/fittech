@@ -1,5 +1,6 @@
 <template>
   <div>
+  <notifications group="foo" />
     <CCardBody class="d-flex justify-content-between p-0">
       <div>
         <h2>
@@ -23,7 +24,7 @@
     </CCardBody>
     <CCardBody class="p-0">
       <hr />
-      <b-row>
+      <!--<b-row>
         <b-col lg="12" class="my-1">
           <b-form-group>
             <b-form-radio-group
@@ -35,7 +36,7 @@
             ></b-form-radio-group>
           </b-form-group>
         </b-col>
-      </b-row>
+      </b-row>-->
       <CCard :style="toggle">
         <CCardBody>
           <b-row>
@@ -119,11 +120,11 @@
                 <b-dropdown-item @click="toEdit(row.item.order_id)">
                   <i class="las la-edit la-lg pr-2"></i> 編輯
                 </b-dropdown-item>
-                <b-dropdown-item v-if="row.item.develop_id==3" >
-                  <i class="las la-edit la-lg pr-2"></i> 變更開發模式
+                <b-dropdown-item v-if="row.item.develop_id==3" @click="toDevelop(row.item.order_id)">
+                  <i class="las la-pencil-alt la-lg pr-2"></i> 變更開發模式
                 </b-dropdown-item>
-                <b-dropdown-item @click="checkDel(row.item.posts_id)" v-if="row.item.status==5">
-                  <i class="las la-times-circle la-lg pr-2"></i> 刪除
+                <b-dropdown-item @click="checkDel(row.item.order_id)" >
+                  <i class="las la-trash-alt la-lg pr-2"></i> 刪除
                 </b-dropdown-item>
               </b-dropdown>
             </template>
@@ -160,6 +161,24 @@
         </b-col>
     </b-modal>
 
+    <b-modal id="modal-develop" centered title="變更開發模式" size="xl" v-model="developModal" hide-footer class="modal" >
+        <b-col class="pt-3 pb-3">
+            <develop :develop_opt="develop_opt" :order_id="developOrderId" @saveDevelop="saveDevelop"></develop>
+        </b-col>
+    </b-modal>
+
+    <b-modal id="modal-delete" centered title="刪除訂單" size="xl" v-model="deleteModal" hide-footer class="modal" >
+      <p class="py-3">確定刪除訂單嗎？資料一經刪除則不可回復！</p>
+      <div class="text-center pt-3">
+        <button type="button" @click="toDel()" class=""> 
+          確定刪除
+        </button>
+        <button type="button" @click="deleteModal=false" class="closeBtn">    
+          取消
+        </button>
+      </div>     
+    </b-modal>
+
     <b-modal id="modal-center" centered title="BootstrapVue" v-model="hintModal" hide-footer hide-header class="modal" no-close-on-backdrop>
         <b-col class="text-center pt-3 pb-3">
             <h3 class="pb-2">{{modalTitle}}</h3>
@@ -191,6 +210,8 @@ import "vue2-datepicker/index.css";
 
 import create from "./Create";
 import edit from "./Edit";
+import develop from "./Develop";
+
 export default {
   data() {
     return {
@@ -275,8 +296,11 @@ export default {
 
       createModal:false,
       editModal:false,
+      deleteModal:false,
+      developModal:false,
 
       editOrderId:"",
+      developOrderId:"",
 
       customer_opt:[],
       develop_opt:[]
@@ -290,7 +314,6 @@ export default {
 
       for(var i=0;i<customer_opt.length;i++)
       {
-        console.log(val)
         if(customer_opt[i].value==val)
         {
 
@@ -302,7 +325,6 @@ export default {
 
       for(var i=0;i<develop_opt.length;i++)
       {
-        console.log(val)
         if(develop_opt[i].value==val)
         {
 
@@ -326,6 +348,7 @@ export default {
     "date-picker":DatePicker,
     create,
     edit,
+    develop,
   },
   props: {
     service: String,
@@ -408,12 +431,10 @@ export default {
     toEdit(id) {
       this.editModal=true
       this.editOrderId=id
-      // console.log(this.type)
-      // this.$router.push({
-      //   name: "posts.edit",
-      //   params: { type: this.type  },
-      //   query:{ posts_id: id }
-      // });
+    },
+    toDevelop(id){
+      this.developModal=true
+      this.developOrderId=id
     },
     saveCreate(){
       this.createModal=false
@@ -423,35 +444,24 @@ export default {
       this.editModal=false
       this.getLists(1);
     },
+    saveDevelop(){
+      this.developModal=false
+      this.getLists(1);
+    },
     checkDel(id){
       this.delId=id
-      this.hintModal=true
-      this.modalTitle="提示"
-      this.modalContent="確認進行刪除嗎？一經刪除後不可回覆！"
-      this.modalType='delCheck'
+      this.deleteModal=true
     },
     toDel(id) {
-      this.hintModal=false
+      this.deleteModal=false
       this.loadingModal=true
       let data = {
-        action: "delete",
-        posts_id: this.delId,
-        type: this.type,
+        order_id: this.delId,
       };
-      this.$http.post("posts", data).then((res) => {
-        if (res.data.code == 200) {
-          if (res.data.status == "success") {
-            this.loadingModal=false
-            setTimeout(()=>{
-              this.hintModal=true
-              this.modalTitle=res.data.message
-              this.modalContent=""
-              this.modalType=''
-            },500)
-            
-            this.getLists(1);
-          }
-        }
+      this.$http.post("delOrderData", data)
+      .then((res) => {
+        this.loadingModal=false
+        this.getLists(1)
       });
     },
     
