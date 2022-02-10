@@ -29,7 +29,7 @@
                     單據日期
                 </CCol>
                 <CCol sm="4" md="10" lg="3">
-                    <date-picker v-model="info.order_date" type="datetime" placeholder="指定單據日期" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
+                    <date-picker v-model="info.order_date" type="datetime" placeholder="單據日期" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
                 </CCol>
             </template>    
         </CRow>

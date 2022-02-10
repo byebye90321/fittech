@@ -224,7 +224,7 @@ export default {
       fields: [
         {
           key: "order_num",
-          label: "編號",
+          label: "採購單號",
           sortable: true,
           // thStyle: { width: "10%" },
           // thClass: "text-center",
