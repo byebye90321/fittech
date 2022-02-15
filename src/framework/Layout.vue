@@ -37,8 +37,8 @@ export default {
             // ]},
 
             {name: "進度追蹤系統",url: "/order",icon: "fas fa-file-contract",childrens:[
-              {name: "訂單管理",url: "/order/orderlist",icon: "far fa-folder-open",childrens:[]},
-              {name: "自家開發管理",url: "/order/self",icon: "fas fa-briefcase",childrens:[]},
+              {name: "訂單管理",url: "/order/list",icon: "far fa-folder-open",childrens:[]},
+              {name: "自家開發管理",url: "/own/lists",icon: "fas fa-briefcase",childrens:[]},
               {name: "委外開發管理",url: "/order/outsourcing",icon: "far fa-building",childrens:[]},
               {name: "結束訂單",url: "/order/completed",icon: "fas fa-calendar-day",childrens:[]},
             ]},

@@ -25,6 +25,7 @@ Vue.use(Notifications)
 const whiteList = ['/login','/snslogin'] // 路由白名单
 
 router.beforeEach((to, from, next)=>{
+
   const isLogin = sessionStorage.getItem('token')
   if(isLogin){
     next()

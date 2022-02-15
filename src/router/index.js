@@ -59,7 +59,7 @@ function configRoutes() {
             redirect: '/icons/coreui-icons',
             children: [
               {
-                path: '/order/orderlist',
+                path: '/order/list',
                 name: '訂單管理',
                 meta: {
                     label: '訂單管理',
@@ -68,13 +68,13 @@ function configRoutes() {
                 component: () => import('@/views/order/OrderList.vue'),
               },
               {
-                path: '/order/self',
+                path: '/own/lists',
                 name: '自家開發管理',
                 meta: {
                     label: '自家開發管理',
                     roles: ['*']
                 },
-                component: () => import('@/views/order/SelfOrder.vue'),
+                component: () => import('@/views/own/Lists.vue'),
               },
               {
                 path: '/order/completed',
