@@ -13,47 +13,10 @@
           <i class="fas fa-plus fa-lg"></i>
           新增
         </button>
-        <button
-          @click="toggleSearch()"
-          v-html="toggle_text"
-          class="page-header-btn"
-        >
-          {{ toggle_text }}
-        </button>
       </div>
     </CCardBody>
     <CCardBody class="p-0">
       <hr />
-      <!--<b-row>
-        <b-col lg="12" class="my-1">
-          <b-form-group>
-            <b-form-radio-group
-              buttons
-              button-variant="outline-danger"
-              v-model="filter.status"
-              v-on:change="toStatus($event)"
-              :options="status_opt"
-            ></b-form-radio-group>
-          </b-form-group>
-        </b-col>
-      </b-row>-->
-      <CCard :style="toggle">
-        <CCardBody>
-          <b-row>
-              <b-col lg="4" class="my-1">
-                <b-form-input id="`type-date`" type="date"></b-form-input>
-              </b-col> 
-              <b-col lg="4" class="my-1">
-                <date-picker v-model="info.datetime" type="datetime" placeholder="指定發佈時間" format="YYYY-MM-DD" value-type="format" ></date-picker>                  
-              </b-col>    
-
-              
-              <b-col lg="4" class="my-1">
-                  <button @click="getLists(1)">搜尋</button>
-              </b-col>
-          </b-row>
-        </CCardBody>
-      </CCard>
       <CCard>
         <CCardBody class="p-0">
           <b-table
@@ -179,19 +142,6 @@
       </div>     
     </b-modal>
 
-    <b-modal id="modal-center" centered title="BootstrapVue" v-model="hintModal" hide-footer hide-header class="modal" no-close-on-backdrop>
-        <b-col class="text-center pt-3 pb-3">
-            <h3 class="pb-2">{{modalTitle}}</h3>
-            <p class="pb-2" v-html="modalContent"></p>
-            <div v-if="modalType=='delCheck'" >
-                <button @click="toDel">確定</button>
-                <button @click="$bvModal.hide('modal-center')" class="closeBtn">取消</button>
-            </div>
-            <div v-else >
-                <button @click="$bvModal.hide('modal-center')">確定</button>
-            </div>
-        </b-col>
-    </b-modal>
     <b-modal id="loading" centered v-model="loadingModal" hide-footer hide-header class="modal" no-close-on-backdrop >
         <b-col class="text-center pt-3 pb-3">
             <b-spinner class="mr-3"></b-spinner>Loading...
@@ -215,9 +165,6 @@ import develop from "./Develop";
 export default {
   data() {
     return {
-      info:{
-        datetime:"",
-      },
       //列表
       isBusy: false,
       dataList: [],
@@ -226,23 +173,16 @@ export default {
           key: "order_num",
           label: "採購單號",
           sortable: true,
-          // thStyle: { width: "10%" },
-          // thClass: "text-center",
-          // tdClass: "text-center p-0",
         },
         {
           key: "customer",
           label: "客戶",
           sortable: true,
-          // thStyle: { width: "20%" },
-          // thClass: "text-center",
-          // tdClass: "text-left",
         },
         {
           key: "item_num",
           label: "品號",
           sortable: true,
-          // thStyle: { width: "15%" },
         },
         {
           key: "item_name",
@@ -282,17 +222,9 @@ export default {
         status: 0,
       },
       status_opt: [],
-      terms:[],
-      toggle: "display:none",
-      toggle_text: '<i class="fas fa-eye fa-lg"></i>進階搜尋',
 
       //modal
-      hintModal: false,
-      modalTitle: "",
-      modalContent: "",
       loadingModal: false,
-      modalType:'',
-      delId:'',
 
       createModal:false,
       editModal:false,
@@ -332,27 +264,12 @@ export default {
         }
       }
     },
-    textFilter: function (value) {
-      var t = "";
-      if (value.length > 0) {
-        for (var i = 0; i < value.length; i++) {
-          t += value[i].name + " ";
-        }
-      } else {
-        t = "-- 無 --";
-      }
-      return t;
-    },
   },
   components:{
     "date-picker":DatePicker,
     create,
     edit,
     develop,
-  },
-  props: {
-    service: String,
-    type: String,
   },
   created() {
     this.getLists(1)
@@ -382,7 +299,6 @@ export default {
           currPage: page, // 停用前端分頁，讓表格永遠顯示後端分頁的第一筆。
           perPage: resData.per_page,
           maxPage: resData.last_page,
-
         }
       })  
       
@@ -400,30 +316,6 @@ export default {
             console.log(res)
             this.develop_opt = res.data.options
         })
-    },
-    getStatusOpt() {
-      let data = {};
-      this.$http.post("posts/status", data).then((res) => {
-        if (res.data.code == 200) {
-          if (res.data.status == "success") {
-            var obj = res.data.data;
-            this.status_opt.push({ text: "全部顯示", value: 0 });
-            for (var prop in obj) {
-              if (obj.hasOwnProperty(prop)) {
-                this.status_opt.push({ text: obj[prop], value: prop });
-              }
-            }
-          } else {
-            alert(res.data.message);
-          }
-        } else {
-          alert(res.data.message);
-        }
-      });
-    },
-    toStatus(e) {
-      this.filter.status = e;
-      this.getLists(1);
     },
     toCreate() {
       this.createModal=true
@@ -465,15 +357,6 @@ export default {
       });
     },
     
-    toggleSearch() {
-      if (this.toggle == "display:none") {
-        this.toggle = "display:block";
-        this.toggle_text = '<i class="fas fa-eye-slash fa-lg"></i>關閉搜尋';
-      } else {
-        this.toggle = "display:none";
-        this.toggle_text = '<i class="fas fa-eye fa-lg"></i>進階搜尋';
-      }
-    },
   },
   watch: {
     $route(to, from) {

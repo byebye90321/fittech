@@ -61,7 +61,6 @@
                     buttons
                     button-variant="outline-danger"
                     v-model="filter.status"
-                    v-on:change="toStatus($event)"
                     :options="status_opt"
                   ></b-form-radio-group>
                 </b-form-group>
@@ -150,10 +149,10 @@
                   <i class="las la-edit la-lg pr-2"></i> 編輯
                 </b-dropdown-item>
                 <b-dropdown-item @click="toFinished(row.item.tag_id)" v-if="row.item.develop_status==8">
-                  <i class="las la-edit la-lg pr-2"></i> 開發完成
+                  <i class="las la-check-circle la-lg pr-2"></i> 開發完成
                 </b-dropdown-item>
-                <b-dropdown-item v-if="row.item.develop_status==9">
-                  <i class="las la-edit la-lg pr-2"></i> 確認
+                <b-dropdown-item @click="toConfirm(row.item.tag_id)" v-if="row.item.develop_status==9">
+                  <i class="las la-check la-lg pr-2"></i> 確認
                 </b-dropdown-item>
               </b-dropdown>
             </template>
@@ -190,36 +189,10 @@
         </b-col>
     </b-modal>
 
- 
-
-    <b-modal id="modal-delete" centered title="刪除訂單" size="xl" v-model="deleteModal" hide-footer class="modal" >
-      <p class="py-3">確定刪除訂單嗎？資料一經刪除則不可回復！</p>
-      <div class="text-center pt-3">
-        <button type="button" @click="toDel()" class=""> 
-          確定刪除
-        </button>
-        <button type="button" @click="deleteModal=false" class="closeBtn">    
-          取消
-        </button>
-      </div>     
-    </b-modal>
-
-    <b-modal id="modal-center" centered title="BootstrapVue" v-model="hintModal" hide-footer hide-header class="modal" no-close-on-backdrop>
-        <b-col class="text-center pt-3 pb-3">
-            <h3 class="pb-2">{{modalTitle}}</h3>
-            <p class="pb-2" v-html="modalContent"></p>
-            <div v-if="modalType=='delCheck'" >
-                <button @click="toDel">確定</button>
-                <button @click="$bvModal.hide('modal-center')" class="closeBtn">取消</button>
-            </div>
-            <div v-else >
-                <button @click="$bvModal.hide('modal-center')">確定</button>
-            </div>
-        </b-col>
-    </b-modal>
     <b-modal id="loading" centered v-model="loadingModal" hide-footer hide-header class="modal" no-close-on-backdrop >
         <b-col class="text-center pt-3 pb-3">
-            <b-spinner class="mr-3"></b-spinner>Loading...
+            <b-spinner class="mr-3"></b-spinner>
+            <!-- Loading... -->
         </b-col>
     </b-modal>
 
@@ -235,7 +208,6 @@ import "vue2-datepicker/index.css";
 
 import edit from "./Edit";
 import finished from "./Finished";
-// import develop from "./Develop";
 
 export default {
   data() {
@@ -251,23 +223,16 @@ export default {
           key: "customer",
           label: "客戶",
           sortable: true,
-          // thStyle: { width: "20%" },
-          // thClass: "text-center",
-          // tdClass: "text-left",
         },
         {
           key: "order_num",
           label: "採購單號",
           sortable: true,
-          // thStyle: { width: "10%" },
-          // thClass: "text-center",
-          // tdClass: "text-center p-0",
         },
         {
           key: "item_num",
           label: "品號",
           sortable: true,
-          // thStyle: { width: "15%" },
         },
         {
           key: "item_name",
@@ -333,20 +298,13 @@ export default {
       toggle_text: '<i class="fas fa-eye fa-lg"></i>進階搜尋',
 
       //modal
-      hintModal: false,
-      modalTitle: "",
-      modalContent: "",
       loadingModal: false,
-      modalType:'',
-      delId:'',
+
 
       editModal:false,
-      deleteModal:false,
-      // developModal:false,
       finishedModal:false,
 
       editOrderId:"",
-      // developOrderId:"",
       finishedId:"",
 
       status_opt:[],
@@ -384,27 +342,11 @@ export default {
         }
       }
     },
-    textFilter: function (value) {
-      var t = "";
-      if (value.length > 0) {
-        for (var i = 0; i < value.length; i++) {
-          t += value[i].name + " ";
-        }
-      } else {
-        t = "-- 無 --";
-      }
-      return t;
-    },
   },
   components:{
     "date-picker":DatePicker,
     edit,
     finished,
-    // develop,
-  },
-  props: {
-    service: String,
-    type: String,
   },
   created() {
     this.getLists(1)
@@ -460,32 +402,6 @@ export default {
           this.material_opt = res.data.options
       })
     },
-
-    // getStatusOpt() {
-    //   let data = {};
-    //   this.$http.post("posts/status", data).then((res) => {
-    //     if (res.data.code == 200) {
-    //       if (res.data.status == "success") {
-    //         var obj = res.data.data;
-    //         this.status_opt.push({ text: "全部顯示", value: 0 });
-    //         for (var prop in obj) {
-    //           if (obj.hasOwnProperty(prop)) {
-    //             this.status_opt.push({ text: obj[prop], value: prop });
-    //           }
-    //         }
-    //       } else {
-    //         alert(res.data.message);
-    //       }
-    //     } else {
-    //       alert(res.data.message);
-    //     }
-    //   });
-    // },
-    toStatus(e) {
-      this.filter.status = e;
-      this.getLists(1);
-    },
-
     toEdit(id) {
       this.editModal=true
       this.editOrderId=id
@@ -494,13 +410,30 @@ export default {
       this.finishedModal=true
       this.finishedId=id
     },
-    // toDevelop(id){
-    //   this.developModal=true
-    //   this.developOrderId=id
-    // },
-    saveCreate(){
-      this.createModal=false
-      this.getLists(1);
+    toConfirm(id) {
+      this.loadingModal=true
+      let data={
+        tag_id:id
+      }
+      this.$http.post("/confirm",data)
+      .then((res) => {
+          console.log(res)
+          this.loadingModal=false
+          if(res.data.status=='success'){
+            this.$notify({
+                group: 'foo',
+                type: 'success',
+                title: '成功',
+            });
+            this.getLists(1);
+          }else if(res.data.status=='unPermission'){
+            this.$notify({
+                group: 'foo',
+                type: 'error',
+                title: '無操作權限',
+            });
+          }
+      })
     },
     saveEdit(){
       this.editModal=false
@@ -510,26 +443,7 @@ export default {
       this.finishedModal=false
       this.getLists(1);
     },
-    // saveDevelop(){
-    //   this.developModal=false
-    //   this.getLists(1);
-    // },
-    checkDel(id){
-      this.delId=id
-      this.deleteModal=true
-    },
-    toDel(id) {
-      this.deleteModal=false
-      this.loadingModal=true
-      let data = {
-        order_id: this.delId,
-      };
-      this.$http.post("delOrderData", data)
-      .then((res) => {
-        this.loadingModal=false
-        this.getLists(1)
-      });
-    },
+
     
     toggleSearch() {
       if (this.toggle == "display:none") {
