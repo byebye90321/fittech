@@ -80,7 +80,7 @@ export default {
   },
   methods:{
     onClick() {
-      this.$http.get("logout")
+      this.$http.get("/auth/logout")
       .then(res => {
         sessionStorage.removeItem("token");
         sessionStorage.removeItem('manager')

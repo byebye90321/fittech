@@ -76,15 +76,24 @@ function configRoutes() {
                 },
                 component: () => import('@/views/own/Lists.vue'),
               },
-            //   {
-            //     path: '/order/completed',
-            //     name: '結束訂單',
-            //     meta: {
-            //         label: '結束訂單',
-            //         roles: ['*']
-            //     },
-            //     component: () => import('@/views/order/Completed.vue'),
-            //   },
+              {
+                path: '/outsource/lists',
+                name: '委外開發管理',
+                meta: {
+                    label: '委外開發管理',
+                    roles: ['*']
+                },
+                component: () => import('@/views/outsource/Lists.vue'),
+              },
+              {
+                path: '/completed/lists',
+                name: '結束訂單',
+                meta: {
+                    label: '結束訂單',
+                    roles: ['*']
+                },
+                component: () => import('@/views/completed/Lists.vue'),
+              },
             //   {
             //     path: '/order/outsourcing',
             //     name: '委外開發管理',

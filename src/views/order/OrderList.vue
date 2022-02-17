@@ -51,10 +51,17 @@
             </template>
 
             <template v-slot:cell(develop_id)="row">
-              <p>{{row.item.develop_id|developFilter(develop_opt)}}</p>
+              <p 
+              :class="
+                  row.item.develop_id == 4
+                    ? 'statusStart'
+                    : row.item.develop_id == 5
+                    ? 'statusWait'
+                    : 'statusEnd'
+                "
+              
+              >{{row.item.develop_id|developFilter(develop_opt)}}</p>
             </template>
-
-       
 
             <template v-slot:cell(reply_date)="row">
               <p>{{row.item.reply_date|dateFilter}}</p>

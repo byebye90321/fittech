@@ -30,18 +30,19 @@ export default {
       sidebarNav: [
         {
           children: [
-            {name: "首頁",url: "/index",icon: "fas fa-home",childrens:[]},
-            // {name: "最新消息",url: "/news",icon: "far fa-newspaper",childrens:[
-            //   {name: "分類",url: "/news/category/lists",icon: "fas fa-th",childrens:[]},
-            //   {name: "列表",url: "/news/lists/lists",icon: "fas fa-list",childrens:[]},
-            // ]},
+            // {name: "首頁",url: "/index",icon: "fas fa-home",childrens:[]},
+            
+            {name: "訂單管理",url: "/order/list",icon: "far fa-folder-open",childrens:[]},
+            {name: "自家開發管理",url: "/own/lists",icon: "fas fa-briefcase",childrens:[]},
+            {name: "委外開發管理",url: "/outsource/lists",icon: "far fa-building",childrens:[]},
+            {name: "結束訂單",url: "/completed/lists",icon: "fas fa-calendar-day",childrens:[]},
 
-            {name: "進度追蹤系統",url: "/order",icon: "fas fa-file-contract",childrens:[
-              {name: "訂單管理",url: "/order/list",icon: "far fa-folder-open",childrens:[]},
-              {name: "自家開發管理",url: "/own/lists",icon: "fas fa-briefcase",childrens:[]},
-              {name: "委外開發管理",url: "/order/outsourcing",icon: "far fa-building",childrens:[]},
-              {name: "結束訂單",url: "/order/completed",icon: "fas fa-calendar-day",childrens:[]},
-            ]},
+            // {name: "進度追蹤系統",url: "/order",icon: "fas fa-file-contract",childrens:[
+            //   {name: "訂單管理",url: "/order/list",icon: "far fa-folder-open",childrens:[]},
+            //   {name: "自家開發管理",url: "/own/lists",icon: "fas fa-briefcase",childrens:[]},
+            //   {name: "委外開發管理",url: "/outsource/lists",icon: "far fa-building",childrens:[]},
+            //   {name: "結束訂單",url: "/order/completed",icon: "fas fa-calendar-day",childrens:[]},
+            // ]},
 
 
           ],

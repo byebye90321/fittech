@@ -78,7 +78,7 @@ export default {
           window.sessionStorage["token"] = JSON.stringify(res.data.token);
           this.isLoading = true;
           setTimeout(() => {
-            this.$router.push("/");
+            this.$router.push("/order/list");
           }, 1000);
           setTimeout(() => {
             this.isLoading = false;
