@@ -27,7 +27,7 @@
                         預計完成日
                     </CCol>
                     <CCol sm="10" md="10" lg="10">
-                        <date-picker v-model="info.estimated_time" type="datetime" placeholder="預計完成日" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
+                        <date-picker v-model="info.estimated_time" type="date" placeholder="預計完成日" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
                     </CCol>
                 </template> 
             </CRow>

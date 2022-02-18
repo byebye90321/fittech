@@ -319,9 +319,10 @@ table.item_product tr:first-child{
 .statusEnd{background: #9da1a8;color:#fff;padding: .1rem .2rem;border-radius: 5px;}
 
 .status_success{background: #8cdb74;color:#fff;padding: .2rem;border-radius: 5px;}
+.status_warning{background:#dbae74;color:#fff;padding: .2rem;border-radius: 5px;}
 .status_wrong{background: #ee6767;color:#fff;padding: .2rem;border-radius: 5px;}
 .status_wait{background: #71bddb;color:#fff;padding: .2rem;border-radius: 5px;}
-
+.mx-datepicker{width: 100% !important;}
 //-----
 // .chsBtnContent {
 //   text-align: center;

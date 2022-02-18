@@ -29,7 +29,7 @@
                     單據日期
                 </CCol>
                 <CCol sm="4" md="10" lg="3">
-                    <date-picker v-model="info.order_date" type="datetime" placeholder="單據日期" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
+                    <date-picker v-model="info.order_date" type="date" placeholder="單據日期" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
                 </CCol>
             </template>    
         </CRow>
@@ -65,7 +65,7 @@
                     預交日期
                 </CCol>
                 <CCol sm="4" md="10" lg="3">
-                    <date-picker v-model="info.pre_delivery_data" type="datetime" placeholder="預交日期" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
+                    <date-picker v-model="info.pre_delivery_data" type="date" placeholder="預交日期" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
                 </CCol>
             </template>    
             <template>
@@ -73,7 +73,7 @@
                     回覆日
                 </CCol>
                 <CCol sm="4" md="10" lg="3">
-                    <date-picker v-model="info.reply_date" type="datetime" placeholder="回覆日" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
+                    <date-picker v-model="info.reply_date" type="date" placeholder="回覆日" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
                 </CCol>
             </template>   
         </CRow>

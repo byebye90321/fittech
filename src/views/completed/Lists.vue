@@ -21,19 +21,6 @@
     </CCardBody>
     <CCardBody class="p-0">
       <hr />
-      <!--<b-row>
-        <b-col lg="12" class="my-1">
-          <b-form-group>
-            <b-form-radio-group
-              buttons
-              button-variant="outline-danger"
-              v-model="filter.status"
-              v-on:change="toStatus($event)"
-              :options="status_opt"
-            ></b-form-radio-group>
-          </b-form-group>
-        </b-col>
-      </b-row>-->
       <CCard :style="toggle">
         <CCardBody>
           <b-row>
@@ -47,27 +34,30 @@
                 <b-form-input type="text" v-model="filter.item_name" placeholder="品名" required></b-form-input>
               </b-col> 
               <b-col lg="4" class="my-1">
-                <date-picker v-model="filter.order_date" type="datetime" placeholder="單據日期" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
+                <date-picker v-model="filter.order_date" type="date" placeholder="單據日期" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
               </b-col> 
               <b-col lg="4" class="my-1">
-                <date-picker v-model="filter.reply_date" type="datetime" placeholder="回覆日" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
+                <date-picker v-model="filter.estimated_time" type="date" placeholder="預交日期" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
+              </b-col> 
+              <b-col lg="4" class="my-1">
+                <date-picker v-model="filter.reply_date" type="date" placeholder="回覆日" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
               </b-col> 
               <b-col lg="4" class="my-1">
                 <b-form-input type="text" v-model="filter.user" placeholder="負責人" required></b-form-input>
               </b-col> 
-              <b-col lg="8" class="my-1">
+              <b-col lg="6" class="my-1">
                 <b-form-group>
                   <b-form-radio-group
                     buttons
                     button-variant="outline-danger"
                     v-model="filter.status"
-                    :options="status_opt"
+                    :options="develop_opt"
                   ></b-form-radio-group>
                 </b-form-group>
               </b-col> 
 
               
-              <b-col lg="4" class="my-1 text-right">
+              <b-col lg="2" class="my-1 text-right">
                   <button @click="getLists(1)">搜尋</button>
               </b-col>
           </b-row>
@@ -129,13 +119,20 @@
             <template v-slot:cell(end_time)="row">
               <p>{{row.item.end_time|dateFilter}}</p>
             </template>
+
+            <template v-slot:cell(expected)="row">
+              <p :class="row.item.expected==14?'status_success':'statusStart'">
+                {{row.item.expected|expectedFilter(expected_opt)}} <span v-if="row.item.expected!=14">{{Math.abs(row.item.day)}}天</span>
+              </p>
+            </template>
             
 
             
 
 
             <template v-slot:cell(edit)="row">
-              <b-dropdown id="dropdown-1" text="操作" class="dropdownPos mr-1">
+              <CButton @click="viewInfo(row.item.tag_id)" color="warning">細項</CButton>
+              <!-- <b-dropdown id="dropdown-1" text="操作" class="dropdownPos mr-1">
                 <template v-slot:button-content>
                   <i class="las la-pencil-alt la-lg"></i>&nbsp;
                   <span class="sr-only">操作</span>
@@ -149,7 +146,7 @@
                 <b-dropdown-item @click="toConfirm(row.item.tag_id)" v-if="row.item.develop_status==9">
                   <i class="las la-check la-lg pr-2"></i> 確認
                 </b-dropdown-item>
-              </b-dropdown>
+              </b-dropdown> -->
             </template>
           </b-table>
         </CCardBody>
@@ -203,9 +200,6 @@ import "vue2-datepicker/index.css";
 export default {
   data() {
     return {
-      info:{
-        datetime:"",
-      },
       //列表
       isBusy: false,
       dataList: [],
@@ -251,7 +245,7 @@ export default {
           sortable: false,
         },
         {
-          key: "day",
+          key: "expected",
           label: "是否逾期",
           sortable: false,
         },
@@ -279,12 +273,12 @@ export default {
           order_date:"",  //單據日期
           item_num:"",  //品號
           item_name:"",  //品名
+          estimated_time:"",//預交日期
           reply_date:"",  //回覆日
           user:"",  //負責人
           status: 0,
       },
-      status_opt: [],
-      terms:[],
+
       toggle: "display:none",
       toggle_text: '<i class="fas fa-eye fa-lg"></i>進階搜尋',
 
@@ -300,7 +294,8 @@ export default {
 
       status_opt:[],
       customer_opt:[],
-      develop_opt:[]
+      develop_opt:[],
+      expected_opt:[],
 
     };
   },
@@ -344,6 +339,17 @@ export default {
         }
       }
     },
+    expectedFilter:function(val,expected_opt){
+
+      for(var i=0;i<expected_opt.length;i++)
+      {
+        if(expected_opt[i].value==val)
+        {
+
+          return expected_opt[i].text
+        }
+      }
+    },
   },
   components:{
     "date-picker":DatePicker,
@@ -354,12 +360,21 @@ export default {
     this.getLists(1)
     this.getCustomerOpt()
     this.getDevelopOpt()
+    this.getExpectedOpt()
   },
   methods: {
     getLists(page){
       this.isBusy = true;
       let data={
-          page:page
+          page:page,
+          order_num:this.filter.order_num,
+          order_date:this.filter.order_date,
+          item_num:this.filter.item_num,
+          item_name:this.filter.item_name,
+          estimated_time:this.filter.estimated_time,
+          reply_date:this.filter.reply_date,
+          name:this.filter.name,
+          status:this.filter.status,
       }
       this.$http.post("/getCompletedItem",data)
       .then((res) => {
@@ -394,6 +409,13 @@ export default {
         .then((res) => {
             console.log(res)
             this.develop_opt = res.data.options
+        })
+    },
+    getExpectedOpt(){
+        this.$http.get("/getExpectedOpt")
+        .then((res) => {
+            console.log(res)
+            this.expected_opt = res.data.options
         })
     },
 

@@ -51,35 +51,24 @@
             </template>
 
             <template v-slot:cell(develop_id)="row">
-              <p 
+              <span
               :class="
                   row.item.develop_id == 4
                     ? 'statusStart'
                     : row.item.develop_id == 5
                     ? 'statusWait'
+                    : row.item.develop_id == 6
+                    ? 'status_warning'  
                     : 'statusEnd'
                 "
               
-              >{{row.item.develop_id|developFilter(develop_opt)}}</p>
+              >{{row.item.develop_id|developFilter(develop_opt)}}</span>
             </template>
 
             <template v-slot:cell(reply_date)="row">
               <p>{{row.item.reply_date|dateFilter}}</p>
             </template>
 
-
-            <template v-slot:cell(status)="row">
-              <span
-                :class="
-                  row.item.status == 2
-                    ? 'statusStart'
-                    : row.item.status == 1
-                    ? 'statusWait'
-                    : 'statusEnd'
-                "
-                >{{ row.item.status_name }}</span
-              >
-            </template>
 
             <template v-slot:cell(edit)="row">
               <b-dropdown id="dropdown-1" text="操作" class="dropdownPos mr-1">
@@ -224,11 +213,6 @@ export default {
       pageCount: 10,
       totalRows: 10,
 
-      //過濾
-      filter: {
-        status: 0,
-      },
-      status_opt: [],
 
       //modal
       loadingModal: false,

@@ -47,14 +47,15 @@
                 <b-form-input type="text" v-model="filter.item_name" placeholder="品名" required></b-form-input>
               </b-col> 
               <b-col lg="4" class="my-1">
-                <date-picker v-model="filter.order_date" type="datetime" placeholder="單據日期" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
+                <b-form-input type="text" v-model="filter.name" placeholder="廠商" required></b-form-input>
               </b-col> 
               <b-col lg="4" class="my-1">
-                <date-picker v-model="filter.reply_date" type="datetime" placeholder="回覆日" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
+                <date-picker v-model="filter.order_date" type="date" placeholder="單據日期" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
               </b-col> 
               <b-col lg="4" class="my-1">
-                <b-form-input type="text" v-model="filter.user" placeholder="負責人" required></b-form-input>
+                <date-picker v-model="filter.reply_date" type="date" placeholder="回覆日" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
               </b-col> 
+              
               <b-col lg="8" class="my-1">
                 <b-form-group>
                   <b-form-radio-group
@@ -113,11 +114,17 @@
               <p>{{row.item.main.reply_date|dateFilter}}</p>
             </template>
             <template v-slot:cell(estimated_time)="row">
-              <p>{{row.item.estimated_time|dateFilter}}</p>
+              <p v-if="row.item.estimated_time!=null">{{row.item.estimated_time|dateFilter}}</p>
+              <p v-else class="text-muted">-未設定-</p>
             </template>
 
             <template v-slot:cell(name)="row">
               <p v-if="row.item.personnel!=null">{{row.item.personnel.name}}</p>
+              <p v-else class="text-muted">-未設定-</p>
+            </template>
+            <template v-slot:cell(price)="row">
+              <p v-if="row.item.price!=null">{{row.item.price}}</p>
+              <p v-else class="text-muted">-未設定-</p>
             </template>
 
             
@@ -210,9 +217,6 @@ import finished from "./Finished";
 export default {
   data() {
     return {
-      info:{
-        datetime:"",
-      },
       //列表
       isBusy: false,
       dataList: [],
@@ -283,7 +287,7 @@ export default {
           item_num:"",  //品號
           item_name:"",  //品名
           reply_date:"",  //回覆日
-          user:"",  //負責人
+          name:"",  //負責人
           status: 0,
       },
       status_opt: [],
@@ -352,7 +356,14 @@ export default {
     getLists(page){
       this.isBusy = true;
       let data={
-          page:page
+          page:page,
+          order_num:this.filter.order_num,
+          order_date:this.filter.order_date,
+          item_num:this.filter.item_num,
+          item_name:this.filter.item_name,
+          reply_date:this.filter.reply_date,
+          name:this.filter.name,
+          status:this.filter.status,
       }
       this.$http.post("/getOutsourceOrderItem",data)
       .then((res) => {
