@@ -25,7 +25,7 @@
         <CCardBody>
           <b-row>
               <b-col lg="4" class="my-1">
-                <b-form-input type="number" v-model="filter.order_num" placeholder="採購單號" required></b-form-input>
+                <b-form-input type="number" v-model="filter.order_num" placeholder="採購單號" required ></b-form-input>
               </b-col> 
               <b-col lg="4" class="my-1">
                 <b-form-input type="text" v-model="filter.item_num" placeholder="品號" required></b-form-input>
@@ -45,7 +45,7 @@
               <b-col lg="4" class="my-1">
                 <b-form-input type="text" v-model="filter.user" placeholder="負責人" required></b-form-input>
               </b-col> 
-              <b-col lg="6" class="my-1">
+              <b-col lg="5" class="my-1">
                 <b-form-group>
                   <b-form-radio-group
                     buttons
@@ -55,9 +55,19 @@
                   ></b-form-radio-group>
                 </b-form-group>
               </b-col> 
+              <b-col lg="2" class="my-1">
+                <b-form-group>
+                  <b-form-radio-group
+                    buttons
+                    button-variant="outline-danger"
+                    v-model="filter.expected"
+                    :options="expected_opt"
+                  ></b-form-radio-group>
+                </b-form-group>
+              </b-col> 
 
               
-              <b-col lg="2" class="my-1 text-right">
+              <b-col lg="12" class="my-1 text-right">
                   <button @click="getLists(1)">搜尋</button>
               </b-col>
           </b-row>
@@ -99,6 +109,12 @@
             <template v-slot:cell(item_name)="row">
               <p>{{row.item.main.item_name}}</p>
             </template>
+            
+            <template v-slot:cell(personnel)="row">
+              <p>{{row.item.personnel.name}}</p>
+            </template>
+
+            
             <template v-slot:cell(develop_id)="row">
               <p 
               :class="
@@ -131,22 +147,8 @@
 
 
             <template v-slot:cell(edit)="row">
-              <CButton @click="viewInfo(row.item.tag_id)" color="warning">細項</CButton>
-              <!-- <b-dropdown id="dropdown-1" text="操作" class="dropdownPos mr-1">
-                <template v-slot:button-content>
-                  <i class="las la-pencil-alt la-lg"></i>&nbsp;
-                  <span class="sr-only">操作</span>
-                </template>
-                <b-dropdown-item @click="toEdit(row.item.tag_id)" v-if="row.item.develop_status==7">
-                  <i class="las la-edit la-lg pr-2"></i> 編輯
-                </b-dropdown-item>
-                <b-dropdown-item @click="toFinished(row.item.tag_id)" v-if="row.item.develop_status==8">
-                  <i class="las la-check-circle la-lg pr-2"></i> 開發完成
-                </b-dropdown-item>
-                <b-dropdown-item @click="toConfirm(row.item.tag_id)" v-if="row.item.develop_status==9">
-                  <i class="las la-check la-lg pr-2"></i> 確認
-                </b-dropdown-item>
-              </b-dropdown> -->
+              <CButton @click="viewInfo(row.item.tag_id,row.item.develop_id)" color="warning">細項</CButton>
+
             </template>
           </b-table>
         </CCardBody>
@@ -169,13 +171,20 @@
       </b-row>
     </CCardBody>
 
-    <!-- <b-modal id="modal-edit" centered title="編輯訂單" size="xl" v-model="editModal" hide-footer class="modal" >
+
+   <b-modal id="modal-edit" centered title="自家開發" size="xl" v-model="ownDetailModal" hide-footer class="modal" >
         <b-col class="pt-3 pb-3">
-            <edit :tag_id="editOrderId" @saveEdit="saveEdit"></edit>
+            <own :info="ownData" :material_opt="material_opt"></own>
         </b-col>
     </b-modal>
 
-   -->
+    <b-modal id="modal-edit" centered title="委外開發" size="xl" v-model="outDetailModal" hide-footer class="modal" >
+        <b-col class="pt-3 pb-3">
+            <outsource :info="outData" ></outsource>
+        </b-col>
+    </b-modal>
+
+    
 
     <b-modal id="loading" centered v-model="loadingModal" hide-footer hide-header class="modal" no-close-on-backdrop >
         <b-col class="text-center pt-3 pb-3">
@@ -194,8 +203,8 @@ import moment from 'moment'
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
 
-// import edit from "./Edit";
-// import finished from "./Finished";
+import own from "./Own";
+import outsource from "./Outsource";
 
 export default {
   data() {
@@ -243,10 +252,15 @@ export default {
           key: "end_time",
           label: "開發完成日",
           sortable: false,
-        },
+        }, 
         {
           key: "expected",
           label: "是否逾期",
+          sortable: false,
+        },
+        {
+          key: "personnel",
+          label: "開發負責人",
           sortable: false,
         },
         {
@@ -277,6 +291,7 @@ export default {
           reply_date:"",  //回覆日
           user:"",  //負責人
           status: 0,
+          expected:0, //逾期
       },
 
       toggle: "display:none",
@@ -286,7 +301,8 @@ export default {
       loadingModal: false,
 
 
-      editModal:false,
+      ownDetailModal:false,
+      outDetailModal:false,
       finishedModal:false,
 
       editOrderId:"",
@@ -296,6 +312,10 @@ export default {
       customer_opt:[],
       develop_opt:[],
       expected_opt:[],
+      material_opt:[],
+
+      ownData:false,
+      outData:false,
 
     };
   },
@@ -353,14 +373,15 @@ export default {
   },
   components:{
     "date-picker":DatePicker,
-    // edit,
-    // finished,
+    own,
+    outsource
   },
   created() {
     this.getLists(1)
     this.getCustomerOpt()
     this.getDevelopOpt()
     this.getExpectedOpt()
+    this.getMaterialOpt()
   },
   methods: {
     getLists(page){
@@ -374,7 +395,8 @@ export default {
           estimated_time:this.filter.estimated_time,
           reply_date:this.filter.reply_date,
           name:this.filter.name,
-          status:this.filter.status,
+          develop_status:this.filter.status,
+          expected:this.filter.expected,
       }
       this.$http.post("/getCompletedItem",data)
       .then((res) => {
@@ -418,7 +440,31 @@ export default {
             this.expected_opt = res.data.options
         })
     },
+    viewInfo(tag_id,develop_id){
+      this.loadingModal=true
+      let data={
+        tag_id:tag_id,
+        develop_id:develop_id
+      }
+      this.$http.post("/getDetail",data)
+        .then((res) => {
+            console.log(res)
+            this.loadingModal=false
+      
+            //自家開發
+            if(develop_id==4){
+              this.ownDetailModal=true
+              this.ownData = res.data[0]
+            }
 
+            //委外開發
+            if(develop_id==5){
+              this.outDetailModal=true
+              this.outData = res.data[0]
+            }
+
+        })
+    },
     toEdit(id) {
       this.editModal=true
       this.editOrderId=id
@@ -450,6 +496,13 @@ export default {
                 title: '無操作權限',
             });
           }
+      })
+    },
+    getMaterialOpt(){
+      this.$http.get("/getMaterialOpt")
+      .then((res) => {
+          console.log(res)
+          this.material_opt = res.data.options
       })
     },
     saveEdit(){

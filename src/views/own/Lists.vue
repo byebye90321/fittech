@@ -52,9 +52,7 @@
               <b-col lg="4" class="my-1">
                 <date-picker v-model="filter.reply_date" type="date" placeholder="回覆日" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
               </b-col> 
-              <b-col lg="4" class="my-1">
-                <b-form-input type="text" v-model="filter.name" placeholder="負責人" required></b-form-input>
-              </b-col> 
+              
               <b-col lg="8" class="my-1">
                 <b-form-group>
                   <b-form-radio-group
@@ -364,8 +362,7 @@ export default {
           item_num:this.filter.item_num,
           item_name:this.filter.item_name,
           reply_date:this.filter.reply_date,
-          name:this.filter.name,
-          status:this.filter.status,
+          develop_status:this.filter.status,
       
       }
       this.$http.post("/getOwnOrderItem",data)
@@ -401,6 +398,7 @@ export default {
         .then((res) => {
             console.log(res)
             this.status_opt = res.data.options
+            this.status_opt.splice((this.status_opt.length-1),1)
         })
     },
     getMaterialOpt(){

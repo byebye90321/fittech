@@ -8,7 +8,7 @@
     <template #toggler>
       <CHeaderNavLink class="pl-0 pr-0">
         <div class="c-avatar w-100" v-c-tooltip.hover="'個人'">
-          User
+          {{user_name}}
           <!-- <img
             src="img/avatars/6.jpg"
             class="c-avatar-img "
@@ -20,9 +20,9 @@
     <CDropdownHeader tag="div" class="text-center" color="light">
       <strong>帳戶資訊</strong>
     </CDropdownHeader>
-    <CDropdownItem :to="'/profile/profile'">
+    <!--<CDropdownItem :to="'/profile/profile'">
       <i class="fa fa-pencil-alt pr-2"></i> 修改個人資料
-    </CDropdownItem>
+    </CDropdownItem>-->
   
     <!-- <CDropdownItem>
       <CIcon name="cil-envelope-open" /> Messages
@@ -73,10 +73,11 @@ export default {
   data () {
     return { 
       itemsCount: 42,
+      user_name:"",
     }
   },
   created(){
-    
+    this.getUserData()
   },
   methods:{
     onClick() {
@@ -87,6 +88,13 @@ export default {
         setTimeout(() => this.$router.push("/login"));
       })
       .catch(error => {});
+    },
+    getUserData(){
+        this.$http.get("/auth/me")
+        .then((res) => {
+            console.log(res)
+            this.user_name = res.data.name
+        }) 
     },
   }
 }

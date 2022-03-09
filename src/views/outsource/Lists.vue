@@ -47,9 +47,6 @@
                 <b-form-input type="text" v-model="filter.item_name" placeholder="品名" required></b-form-input>
               </b-col> 
               <b-col lg="4" class="my-1">
-                <b-form-input type="text" v-model="filter.name" placeholder="廠商" required></b-form-input>
-              </b-col> 
-              <b-col lg="4" class="my-1">
                 <date-picker v-model="filter.order_date" type="date" placeholder="單據日期" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
               </b-col> 
               <b-col lg="4" class="my-1">
@@ -362,8 +359,7 @@ export default {
           item_num:this.filter.item_num,
           item_name:this.filter.item_name,
           reply_date:this.filter.reply_date,
-          name:this.filter.name,
-          status:this.filter.status,
+          develop_status:this.filter.status,
       }
       this.$http.post("/getOutsourceOrderItem",data)
       .then((res) => {
@@ -398,6 +394,7 @@ export default {
         .then((res) => {
             console.log(res)
             this.status_opt = res.data.options
+            this.status_opt.splice((this.status_opt.length-1),1)
         })
     },
     getMaterialOpt(){
