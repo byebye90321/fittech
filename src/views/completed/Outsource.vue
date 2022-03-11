@@ -53,7 +53,7 @@
                     單價
                 </CCol>
                 <CCol sm="4" md="10" lg="4">
-                    <b-form-input type="text" v-model="info.personnel.price" placeholder="單價" disabled required></b-form-input>
+                    <b-form-input type="text" v-model="info.price" placeholder="單價" disabled required></b-form-input>
                 </CCol>
             </template>   
 

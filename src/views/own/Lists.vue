@@ -146,7 +146,7 @@
                   <i class="las la-pencil-alt la-lg"></i>&nbsp;
                   <span class="sr-only">操作</span>
                 </template>
-                <b-dropdown-item @click="toEdit(row.item.tag_id)" v-if="row.item.develop_status==7">
+                <b-dropdown-item @click="toEdit(row.item.tag_id,row.item.main.reply_date)" v-if="row.item.develop_status==7">
                   <i class="las la-edit la-lg pr-2"></i> 編輯
                 </b-dropdown-item>
                 <b-dropdown-item @click="toFinished(row.item.tag_id)" v-if="row.item.develop_status==8">
@@ -180,7 +180,7 @@
 
     <b-modal id="modal-edit" centered title="編輯訂單" size="xl" v-model="editModal" hide-footer class="modal" >
         <b-col class="pt-3 pb-3">
-            <edit :tag_id="editOrderId" @saveEdit="saveEdit"></edit>
+            <edit :tag_id="editOrderId" :reply_date="reply_date" @saveEdit="saveEdit"></edit>
         </b-col>
     </b-modal>
 
@@ -304,6 +304,7 @@ export default {
 
       editOrderId:"",
       finishedId:"",
+      reply_date:"",
 
       status_opt:[],
       customer_opt:[],
@@ -363,7 +364,6 @@ export default {
           item_name:this.filter.item_name,
           reply_date:this.filter.reply_date,
           develop_status:this.filter.status,
-      
       }
       this.$http.post("/getOwnOrderItem",data)
       .then((res) => {
@@ -408,9 +408,10 @@ export default {
           this.material_opt = res.data.options
       })
     },
-    toEdit(id) {
+    toEdit(id,reply_date) {
       this.editModal=true
       this.editOrderId=id
+      this.reply_date=reply_date
     },
     toFinished(id) {
       this.finishedModal=true
@@ -458,6 +459,17 @@ export default {
       } else {
         this.toggle = "display:none";
         this.toggle_text = '<i class="fas fa-eye fa-lg"></i>進階搜尋';
+        this.filter.order_num='';
+        this.filter.order_date='';
+        this.filter.item_num='';
+        this.filter.item_name='';
+        this.filter.reply_date='';
+        this.filter.status='';
+        if(this.$route.query.page==undefined){
+          this.getLists(1);
+        }else{
+          this.getLists(this.$route.query.page);
+        }
       }
     },
   },

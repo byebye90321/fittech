@@ -12,6 +12,7 @@
                             placeholder="開發紀錄"
                             rows="3"
                             max-rows="6"
+                            required
                         ></b-form-textarea>
                     </CCol>
                 </template> 

@@ -141,6 +141,7 @@
                         rows="3"
                         max-rows="6"
                         disabled
+                        required
                     ></b-form-textarea>
                 </CCol>
             </template> 

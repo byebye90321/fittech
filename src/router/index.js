@@ -2,24 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 Vue.use(Router)
 
-// Framework
-// import Layout from '@/framework/Layout.vue'
-
-// import postsRoutes from './posts';
-
-// Page
-// import Home from '@/views/Home.vue';
-// import Page403 from '@/views/pages/Page403.vue';
-// import Page404 from '@/views/pages/Page404.vue';
-// import Page500 from '@/views/pages/Page500.vue';
-// import Login from '@/views/pages/Login.vue';
-// import Register from '@/views/pages/Register.vue';
-
-// import Profile from '@/views/userProfile/Profile.vue';
-// import ResetPassword from '@/views/userProfile/ResetPassword.vue';
-
-// import PostsLayout from '@/views/posts/layout.vue';
-
 function configRoutes() {
     return [
         {
@@ -94,15 +76,25 @@ function configRoutes() {
                 },
                 component: () => import('@/views/completed/Lists.vue'),
               },
-            //   {
-            //     path: '/order/outsourcing',
-            //     name: '委外開發管理',
-            //     meta: {
-            //         label: '委外開發管理',
-            //         roles: ['*']
-            //     },
-            //     component: () => import('@/views/order/OutsourcingOrder.vue'),
-            //   },
+              {
+                path: '/register',
+                name: '建立帳號',
+                meta: {
+                    label: '建立帳號',
+                    roles: ['*']
+                },
+                component: () => import('@/views/user/Register.vue'),
+              },
+              {
+                path: '/resetpassword',
+                name: '建立帳號',
+                meta: {
+                    label: '建立帳號',
+                    roles: ['*']
+                },
+                component: () => import('@/views/user/ResetPassword.vue'),
+              },
+         
             ],
           },
         

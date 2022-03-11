@@ -27,7 +27,8 @@
                         預計完成日
                     </CCol>
                     <CCol sm="10" md="10" lg="10">
-                        <date-picker v-model="info.estimated_time" type="date" placeholder="預計完成日" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
+                        <date-picker v-model="info.estimated_time" :disabled-date="notBeforeToday" type="date" placeholder="預計完成日" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
+                        <p class="pt-2 text-info">※不可填超過回覆日{{reply_date|dateFilter}}之日期</p>
                     </CCol>
                 </template> 
             </CRow>
@@ -65,11 +66,12 @@
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
 import Vue           from 'vue'
-
+import moment from 'moment'
 export default {
     props:{
         tag_id:Number,
         customer_opt:Array,
+        reply_date:String,
     },
     data(){
         return{
@@ -91,13 +93,23 @@ export default {
     },
     created(){
         // this.getData()
-        console.log(this.tag_id)
         this.loading=false
     },
     components:{
         "date-picker":DatePicker,
     },
+    filters:{
+        dateFilter:function(date){
+            if(date!=null&&date!='')
+                return moment(date).format('YYYY-MM-DD').toString()
+            else
+                return ''
+        },
+    },
     methods:{
+        notBeforeToday(date) {
+            return date > new Date(this.reply_date);
+        },
         saveData(){
             if(this.info.order_date==""||this.info.estimated_time==""||this.info.reply_date==""){
                 alert('日期尚未填完')

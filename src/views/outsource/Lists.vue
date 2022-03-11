@@ -454,7 +454,19 @@ export default {
       } else {
         this.toggle = "display:none";
         this.toggle_text = '<i class="fas fa-eye fa-lg"></i>進階搜尋';
+        this.filter.order_num='';
+        this.filter.order_date='';
+        this.filter.item_num='';
+        this.filter.item_name='';
+        this.filter.reply_date='';
+        this.filter.status='';
+        if(this.$route.query.page==undefined){
+          this.getLists(1);
+        }else{
+          this.getLists(this.$route.query.page);
+        }
       }
+      
     },
   },
   watch: {

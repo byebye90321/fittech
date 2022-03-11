@@ -43,9 +43,9 @@
                 <date-picker v-model="filter.reply_date" type="date" placeholder="回覆日" format="YYYY-MM-DD" value-type="format" required></date-picker>                  
               </b-col> 
               <b-col lg="4" class="my-1">
-                <b-form-input type="text" v-model="filter.user" placeholder="負責人" required></b-form-input>
+                <b-form-input type="text" v-model="filter.name" placeholder="負責人" required></b-form-input>
               </b-col> 
-              <b-col lg="5" class="my-1">
+              <b-col lg="3" class="my-1">
                 <b-form-group>
                   <b-form-radio-group
                     buttons
@@ -55,7 +55,7 @@
                   ></b-form-radio-group>
                 </b-form-group>
               </b-col> 
-              <b-col lg="2" class="my-1">
+              <b-col lg="3" class="my-1">
                 <b-form-group>
                   <b-form-radio-group
                     buttons
@@ -67,7 +67,7 @@
               </b-col> 
 
               
-              <b-col lg="12" class="my-1 text-right">
+              <b-col lg="2" class="my-1 text-right">
                   <button @click="getLists(1)">搜尋</button>
               </b-col>
           </b-row>
@@ -289,7 +289,7 @@ export default {
           item_name:"",  //品名
           estimated_time:"",//預交日期
           reply_date:"",  //回覆日
-          user:"",  //負責人
+          name:"",  //負責人
           status: 0,
           expected:0, //逾期
       },
@@ -310,7 +310,10 @@ export default {
 
       status_opt:[],
       customer_opt:[],
-      develop_opt:[],
+      develop_opt:[
+        {value: 4, text: "自行開發"},
+        {value: 5, text: "委外開發"}
+      ],
       expected_opt:[],
       material_opt:[],
 
@@ -379,7 +382,7 @@ export default {
   created() {
     this.getLists(1)
     this.getCustomerOpt()
-    this.getDevelopOpt()
+    // this.getDevelopOpt()
     this.getExpectedOpt()
     this.getMaterialOpt()
   },
@@ -522,6 +525,21 @@ export default {
       } else {
         this.toggle = "display:none";
         this.toggle_text = '<i class="fas fa-eye fa-lg"></i>進階搜尋';
+        this.filter.order_num='';
+        this.filter.order_date='';
+        this.filter.item_num='';
+        this.filter.item_name='';
+        this.filter.estimated_time='';
+        this.filter.reply_date='';
+        this.filter.name='';
+        this.filter.status='';
+        this.filter.expected='';
+      
+        if(this.$route.query.page==undefined){
+          this.getLists(1);
+        }else{
+          this.getLists(this.$route.query.page);
+        }
       }
     },
   },

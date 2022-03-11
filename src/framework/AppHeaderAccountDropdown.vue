@@ -20,9 +20,12 @@
     <CDropdownHeader tag="div" class="text-center" color="light">
       <strong>帳戶資訊</strong>
     </CDropdownHeader>
-    <!--<CDropdownItem :to="'/profile/profile'">
-      <i class="fa fa-pencil-alt pr-2"></i> 修改個人資料
-    </CDropdownItem>-->
+    <CDropdownItem :to="'/resetpassword'">
+      <i class="fa fa-pencil-alt pr-2"></i> 編輯個人密碼
+    </CDropdownItem>
+    <CDropdownItem :to="'/register'">
+      <i class="fa fa-user-plus pr-2"></i> 建立新帳號
+    </CDropdownItem>
   
     <!-- <CDropdownItem>
       <CIcon name="cil-envelope-open" /> Messages
