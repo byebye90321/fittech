@@ -47,7 +47,7 @@ function configRoutes() {
                     label: '訂單管理',
                     roles: ['*']
                 },
-                component: () => import('@/views/order/OrderList.vue'),
+                component: () => import('@/views/order/List.vue'),
               },
               {
                 path: '/own/lists',
@@ -75,6 +75,33 @@ function configRoutes() {
                     roles: ['*']
                 },
                 component: () => import('@/views/completed/Lists.vue'),
+              },
+              {
+                path: '/add/customer',
+                name: '新增客戶',
+                meta: {
+                    label: '新增客戶',
+                    roles: ['*']
+                },
+                // component: () => import('@/views/completed/Lists.vue'),
+              },
+              {
+                path: '/add/material',
+                name: '新增材質',
+                meta: {
+                    label: '新增材質',
+                    roles: ['*']
+                },
+                // component: () => import('@/views/completed/Lists.vue'),
+              },
+              {
+                path: '/add/supplier',
+                name: '新增廠商',
+                meta: {
+                    label: '新增廠商',
+                    roles: ['*']
+                },
+                // component: () => import('@/views/completed/Lists.vue'),
               },
               {
                 path: '/register',

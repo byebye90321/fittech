@@ -3,70 +3,14 @@
         <template v-if="!loading">
             <CRow class="form-group">
                 <template>
-                    <CCol sm="2" md="2" lg="1" class="col-form-label" >
-                        材質
+                    <CCol sm="2" md="2" lg="2" class="col-form-label" >
+                        配合者
                     </CCol>
-                    <CCol sm="10" md="10" lg="3">
-                        <b-form-select v-model="info.material_id" :options="material_opt" text-field="text" value-field="value" required >
-                            <template #first>
-                                <b-form-select-option :value="null" disabled >- 請選擇 -</b-form-select-option >
-                            </template>
-                        </b-form-select>
-                    </CCol>
-                </template>
-            </CRow>
-            <CRow class="form-group">
-                <template>
-                    <CCol sm="2" md="3" lg="1" class="col-form-label" >
-                        長度
-                    </CCol>
-                    <CCol sm="4" md="10" lg="3">
-                        <b-form-input type="text" v-model="info.length" placeholder="長度" required></b-form-input>
-                    </CCol>
-                </template>
-                <template>
-                    <CCol sm="2" md="3" lg="1" class="col-form-label" >
-                        寬度
-                    </CCol>
-                    <CCol sm="4" md="10" lg="3">
-                        <b-form-input type="text" v-model="info.width" placeholder="寬度" required></b-form-input>
+                    <CCol sm="10" md="10" lg="10">
+                        <b-form-input type="text" v-model="info.name" placeholder="配合者" required></b-form-input>
                     </CCol>
                 </template>   
-                <template>
-                    <CCol sm="2" md="3" lg="1" class="col-form-label" >
-                        高度
-                    </CCol>
-                    <CCol sm="4" md="10" lg="3">
-                        <b-form-input type="text" v-model="info.high" placeholder="高度" required></b-form-input>                 
-                    </CCol>
-                </template> 
-            </CRow>
-            <CRow class="form-group">
-                <template>
-                    <CCol sm="2" md="3" lg="1" class="col-form-label" >
-                        數量
-                    </CCol>
-                    <CCol sm="4" md="10" lg="3">
-                        <b-form-input type="text" v-model="info.quantity" placeholder="數量" required></b-form-input>
-                    </CCol>
-                </template>
-                <template>
-                    <CCol sm="2" md="3" lg="1" class="col-form-label" >
-                        單價
-                    </CCol>
-                    <CCol sm="4" md="10" lg="3">
-                        <b-form-input type="text" v-model="info.unit_price" placeholder="單價" required></b-form-input>
-                    </CCol>
-                </template>   
-                <template>
-                    <CCol sm="2" md="3" lg="1" class="col-form-label" >
-                        材質
-                    </CCol>
-                    <CCol sm="4" md="10" lg="3">
-                        <b-form-input type="text" v-model="info.material" placeholder="材質" required></b-form-input>
-                    </CCol>
-                </template> 
-            </CRow>
+            </CRow> 
             <CRow class="form-group">
                 <template>
                     <CCol sm="2" md="2" lg="2" class="col-form-label" >
@@ -128,13 +72,7 @@ export default {
         return{
             loading:true,
             info:{
-                material_id:"", //材質
-                length:"", //長
-                width:"", //寬
-                high:"", //高
-                material:"", //材質
-                quantity:"", //數量
-                unit_price:"", //單價
+                name:"",  //配合者
 
                 difficulty:1,  //難易度
 
@@ -182,13 +120,7 @@ export default {
             this.loading=true
             let data={
                 tag_id:this.tag_id,
-                material_id :this.info.material_id ,
-                length :this.info.length ,
-                width :this.info.width ,
-                high :this.info.high ,
-                material :this.info.material ,
-                quantity :this.info.quantity ,
-                unit_price:this.info.unit_price, 
+                name:this.info.name, 
                 difficulty:this.info.difficulty, 
                 record:this.info.record, 
             }

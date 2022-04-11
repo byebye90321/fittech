@@ -11,16 +11,7 @@
                     </CCol>
                 </template>
             </CRow>
-            <CRow class="form-group">
-                <template>
-                    <CCol sm="2" md="2" lg="2" class="col-form-label" >
-                        配合者
-                    </CCol>
-                    <CCol sm="10" md="10" lg="10">
-                        <b-form-input type="text" v-model="info.name" placeholder="配合者" required></b-form-input>
-                    </CCol>
-                </template>   
-            </CRow>
+
             <CRow class="form-group">
                 <template>
                     <CCol sm="2" md="2" lg="2" class="col-form-label" >
@@ -77,8 +68,7 @@ export default {
         return{
             loading:true,
             info:{
-                leader:"", //開發者
-                name:"",  //配合者
+                leader:"", //開發者       
                 estimated_time:"",  //預計完成日
                 difficulty:1,  //難易度
             },
@@ -119,7 +109,6 @@ export default {
             let data={
                 tag_id:this.tag_id,
                 leader :this.info.leader ,
-                name:this.info.name, 
                 estimated_time:this.info.estimated_time, 
                 difficulty:this.info.difficulty, 
             }

@@ -147,7 +147,7 @@
                   <i class="las la-pencil-alt la-lg"></i>&nbsp;
                   <span class="sr-only">操作</span>
                 </template>
-                <b-dropdown-item @click="toEdit(row.item.tag_id)" v-if="row.item.develop_status==7">
+                <b-dropdown-item @click="toEdit(row.item.tag_id,row.item.main.reply_date)" v-if="row.item.develop_status==7">
                   <i class="las la-edit la-lg pr-2"></i> 編輯
                 </b-dropdown-item>
                 <b-dropdown-item @click="toFinished(row.item.tag_id)" v-if="row.item.develop_status==8">
@@ -181,13 +181,13 @@
 
     <b-modal id="modal-edit" centered title="編輯訂單" size="xl" v-model="editModal" hide-footer class="modal" >
         <b-col class="pt-3 pb-3">
-            <edit :tag_id="editOrderId" @saveEdit="saveEdit"></edit>
+            <edit :tag_id="editOrderId" :company_opt="company_opt" :reply_date="reply_date" @saveEdit="saveEdit"></edit>
         </b-col>
     </b-modal>
 
     <b-modal id="modal-edit" centered title="開發完成" size="xl" v-model="finishedModal" hide-footer class="modal" >
         <b-col class="pt-3 pb-3">
-            <finished :tag_id="finishedId" :material_opt="material_opt" @saveFinished="saveFinished"></finished>
+            <finished :tag_id="finishedId" @saveFinished="saveFinished"></finished>
         </b-col>
     </b-modal>
 
@@ -301,10 +301,11 @@ export default {
 
       editOrderId:"",
       finishedId:"",
+      reply_date:"",
 
       status_opt:[],
       customer_opt:[],
-      material_opt:[],
+      company_opt:[],
 
     };
   },
@@ -347,7 +348,7 @@ export default {
     this.getLists(1)
     this.getCustomerOpt()
     this.getDevelopStatusOpt()
-    this.getMaterialOpt()
+    this.getCompany()
   },
   methods: {
     getLists(page){
@@ -397,16 +398,17 @@ export default {
             this.status_opt.splice((this.status_opt.length-1),1)
         })
     },
-    getMaterialOpt(){
-      this.$http.get("/getMaterialOpt")
+    getCompany(){
+      this.$http.get("/getCompany")
       .then((res) => {
           console.log(res)
-          this.material_opt = res.data.options
+          this.company_opt = res.data.options
       })
     },
-    toEdit(id) {
+    toEdit(id,reply_date) {
       this.editModal=true
       this.editOrderId=id
+      this.reply_date=reply_date
     },
     toFinished(id) {
       this.finishedModal=true

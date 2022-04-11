@@ -39,7 +39,6 @@ import Vue           from 'vue'
 export default {
     props:{
         tag_id:Number,
-        material_opt:Array,
     },
     data(){
         return{

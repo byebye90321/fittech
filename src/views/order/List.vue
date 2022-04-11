@@ -79,6 +79,9 @@
                 <b-dropdown-item @click="toEdit(row.item.order_id)">
                   <i class="las la-edit la-lg pr-2"></i> 編輯
                 </b-dropdown-item>
+                <b-dropdown-item v-if="row.item.develop_id==4||row.item.develop_id==6" @click="toMaterial(row.item.order_id)">
+                  <i class="las la-edit la-lg pr-2"></i> 材料資訊
+                </b-dropdown-item>
                 <b-dropdown-item v-if="row.item.develop_id==3" @click="toDevelop(row.item.order_id)">
                   <i class="las la-pencil-alt la-lg pr-2"></i> 設定開發模式
                 </b-dropdown-item>
@@ -126,6 +129,12 @@
         </b-col>
     </b-modal>
 
+    <b-modal id="modal-edit" centered title="設定材料資訊" size="xl" v-model="materialModal" hide-footer class="modal" >
+        <b-col class="pt-3 pb-3">
+            <material :order_id="materialOrderId" :material_opt="material_opt" @saveMaterial="saveMaterial"></material>
+        </b-col>
+    </b-modal>
+
     <b-modal id="modal-delete" centered title="刪除訂單" size="xl" v-model="deleteModal" hide-footer class="modal" >
       <p class="py-3">確定刪除訂單嗎？資料一經刪除則不可回復！</p>
       <div class="text-center pt-3">
@@ -157,6 +166,7 @@ import "vue2-datepicker/index.css";
 import create from "./Create";
 import edit from "./Edit";
 import develop from "./Develop";
+import material from "./Material";
 
 export default {
   data() {
@@ -221,12 +231,15 @@ export default {
       editModal:false,
       deleteModal:false,
       developModal:false,
+      materialModal:false,
 
       editOrderId:"",
       developOrderId:"",
+      materialOrderId:"",
 
       customer_opt:[],
-      develop_opt:[]
+      develop_opt:[],
+      material_opt:[],
     };
   },
   filters: {
@@ -261,11 +274,13 @@ export default {
     create,
     edit,
     develop,
+    material,
   },
   created() {
     this.getLists(1)
     this.getCustomerOpt()
     this.getDevelopOpt()
+    this.getMaterialOpt()
   },
   methods: {
     getLists(page){
@@ -308,6 +323,13 @@ export default {
             this.develop_opt = res.data.options
         })
     },
+    getMaterialOpt(){
+      this.$http.get("/getMaterialOpt")
+      .then((res) => {
+          console.log(res)
+          this.material_opt = res.data.options
+      })
+    },
     toCreate() {
       this.createModal=true
     },
@@ -319,6 +341,10 @@ export default {
       this.developModal=true
       this.developOrderId=id
     },
+    toMaterial(id) {
+      this.materialModal=true
+      this.materialOrderId=id
+    },
     saveCreate(){
       this.createModal=false
       this.getLists(1);
@@ -329,6 +355,10 @@ export default {
     },
     saveDevelop(){
       this.developModal=false
+      this.getLists(1);
+    },
+    saveMaterial(){
+      this.materialModal=false
       this.getLists(1);
     },
     checkDel(id){
