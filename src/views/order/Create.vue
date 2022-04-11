@@ -55,7 +55,7 @@
                     數量
                 </CCol>
                 <CCol sm="4" md="10" lg="3">
-                    <b-form-input type="text" v-model="info.quantity" placeholder="數量" required></b-form-input>                 
+                    <b-form-input type="number" v-model="info.quantity" placeholder="數量" required></b-form-input>                 
                 </CCol>
             </template> 
         </CRow>

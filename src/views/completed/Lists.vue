@@ -109,6 +109,10 @@
             <template v-slot:cell(item_name)="row">
               <p>{{row.item.main.item_name}}</p>
             </template>
+
+             <template v-slot:cell(leader)="row">
+              <p>{{row.item.personnel.leader}}</p>
+            </template>
             
             <template v-slot:cell(personnel)="row">
               <p>{{row.item.personnel.name}}</p>
@@ -256,6 +260,11 @@ export default {
         {
           key: "expected",
           label: "是否逾期",
+          sortable: false,
+        },
+        {   
+          key: "leader",
+          label: "開發者",
           sortable: false,
         },
         {

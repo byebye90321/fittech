@@ -4,20 +4,20 @@
             <CRow class="form-group">
                 <template>
                     <CCol sm="2" md="2" lg="2" class="col-form-label" >
-                        受理人
+                        開發者
                     </CCol>
                     <CCol sm="10" md="10" lg="10">
-                        <b-form-input type="text" v-model="info.leader" placeholder="受理人" required></b-form-input>
+                        <b-form-input type="text" v-model="info.leader" placeholder="開發者" required></b-form-input>
                     </CCol>
                 </template>
             </CRow>
             <CRow class="form-group">
                 <template>
                     <CCol sm="2" md="2" lg="2" class="col-form-label" >
-                        開發負責人
+                        配合者
                     </CCol>
                     <CCol sm="10" md="10" lg="10">
-                        <b-form-input type="text" v-model="info.name" placeholder="開發負責人" required></b-form-input>
+                        <b-form-input type="text" v-model="info.name" placeholder="配合者" required></b-form-input>
                     </CCol>
                 </template>   
             </CRow>
@@ -77,8 +77,8 @@ export default {
         return{
             loading:true,
             info:{
-                leader:"", //受理人
-                name:"",  //開發負責人
+                leader:"", //開發者
+                name:"",  //配合者
                 estimated_time:"",  //預計完成日
                 difficulty:1,  //難易度
             },

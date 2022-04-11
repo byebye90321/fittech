@@ -52,6 +52,14 @@
         </b-col>
     </b-modal>
 
+    <b-modal id="hintModal" centered v-model="hintModal" hide-footer hide-header class="modal" no-close-on-backdrop >
+        <b-col class="text-center pt-3 pb-3">
+            <h4 class="pb-3"><strong>{{title}}</strong></h4>
+            <p class="pb-3">{{description}}</p>
+            <button @click="toRegister">立即重新登入</button>
+        </b-col>
+    </b-modal>
+
   </div>
 </template>
 
@@ -65,7 +73,11 @@ export default {
         info:{
             password:"",
             checkpassword:"",
-        }
+        },
+
+        hintModal:false,
+        title:"",
+        description:"",
     };
   },
   computed: {
@@ -80,23 +92,40 @@ export default {
   },
   methods: {
     saveData(){
-      this.loading=true
+      this.loadingModal=true
       let data={
           password:this.info.password, 
-          checkpassword:this.info.checkpassword, 
+          // checkpassword:this.info.checkpassword, 
       }
-      this.$http.post("/resetpassword", data)
+      this.$http.post("/auth/resetpassword", data)
       .then((res) => {
-          this.loading=false
+        this.loadingModal=false
+        if(res.data.status==true){ 
           this.$notify({
               group: 'foo',
               type: 'success',
               title: '成功',
           });
+          this.hintModal=true
+          this.title="密碼變更成功"
+          this.description="立即重新登入系統"
+        }else if(res.data.status==false){
+          this.$notify({
+              group: 'foo',
+              type: 'error',
+              title: '失敗',
+              message:res.data.error
+          });
           this.info.password=""
           this.info.checkpassword=""
+        }
+          
       })
     },
+    toRegister(){
+      sessionStorage.removeItem('token')
+      this.$router.push({path:'/login'})
+    }
     
   },
 

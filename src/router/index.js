@@ -87,9 +87,9 @@ function configRoutes() {
               },
               {
                 path: '/resetpassword',
-                name: '建立帳號',
+                name: '修改密碼',
                 meta: {
-                    label: '建立帳號',
+                    label: '修改密碼',
                     roles: ['*']
                 },
                 component: () => import('@/views/user/ResetPassword.vue'),

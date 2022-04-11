@@ -4,20 +4,20 @@
         <CRow class="form-group">
             <template>
                 <CCol sm="2" md="2" lg="2" class="col-form-label" >
-                    受理人
+                    開發者
                 </CCol>
                 <CCol sm="10" md="10" lg="10">
-                    <b-form-input type="text" v-model="info.personnel.leader" placeholder="受理人" disabled required></b-form-input>
+                    <b-form-input type="text" v-model="info.personnel.leader" placeholder="開發者" disabled required></b-form-input>
                 </CCol>
             </template>
         </CRow>
         <CRow class="form-group">
             <template>
                 <CCol sm="2" md="2" lg="2" class="col-form-label" >
-                    開發負責人
+                    配合者
                 </CCol>
                 <CCol sm="10" md="10" lg="10">
-                    <b-form-input type="text" v-model="info.personnel.name" placeholder="開發負責人" disabled required></b-form-input>
+                    <b-form-input type="text" v-model="info.personnel.name" placeholder="配合者" disabled required></b-form-input>
                 </CCol>
             </template>   
         </CRow>      

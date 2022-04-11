@@ -98,25 +98,35 @@ export default {
   },
   methods: {
     saveData(){
-      this.loading=true
+      this.loadingModal=true
       let data={
           name :this.info.name ,
           email:this.info.email, 
           password:this.info.password, 
           checkpassword:this.info.checkpassword, 
       }
-      this.$http.post("/register", data)
+      this.$http.post("/auth/register", data)
       .then((res) => {
-          this.loading=false
-          this.$notify({
-              group: 'foo',
-              type: 'success',
-              title: '成功',
-          });
-          this.info.name=""
-          this.info.email=""
-          this.info.password=""
-          this.info.checkpassword=""
+          this.loadingModal=false
+
+            if(res.data.status==true){ 
+              this.$notify({
+                  group: 'foo',
+                  type: 'success',
+                  title: res.data.error,
+              });
+              this.info.name=""
+              this.info.email=""
+              this.info.password=""
+              this.info.checkpassword=""
+            }else if(res.data.status==false){
+                this.$notify({
+                    group: 'foo',
+                    type: 'error',
+                    title: res.data.error,
+                });
+            }
+
       })
     },
     

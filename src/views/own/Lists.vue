@@ -249,12 +249,12 @@ export default {
         },
         {
           key: "leader",
-          label: "受理人",
+          label: "開發者",
           sortable: false,
         },
         {
           key: "name",
-          label: "開發負責人",
+          label: "配合者",
           sortable: false,
         },
         {
