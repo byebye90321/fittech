@@ -77,31 +77,13 @@ function configRoutes() {
                 component: () => import('@/views/completed/Lists.vue'),
               },
               {
-                path: '/add/customer',
-                name: '新增客戶',
+                path: '/add/lists',
+                name: '新增下拉選項',
                 meta: {
-                    label: '新增客戶',
+                    label: '新增下拉選項',
                     roles: ['*']
                 },
-                // component: () => import('@/views/completed/Lists.vue'),
-              },
-              {
-                path: '/add/material',
-                name: '新增材質',
-                meta: {
-                    label: '新增材質',
-                    roles: ['*']
-                },
-                // component: () => import('@/views/completed/Lists.vue'),
-              },
-              {
-                path: '/add/supplier',
-                name: '新增廠商',
-                meta: {
-                    label: '新增廠商',
-                    roles: ['*']
-                },
-                // component: () => import('@/views/completed/Lists.vue'),
+                component: () => import('@/views/add/Lists.vue'),
               },
               {
                 path: '/register',

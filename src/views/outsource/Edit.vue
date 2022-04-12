@@ -49,7 +49,7 @@
             <CRow class="form-group">
                 <template>
                     <CCol sm="2" md="2" lg="2" class="col-form-label" >
-                        是否表面處理 (surfaceTreatment )
+                        是否表面處理
                     </CCol>
                     <CCol sm="10" md="10" lg="10">
                         <b-form-checkbox

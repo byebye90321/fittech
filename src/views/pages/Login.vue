@@ -75,14 +75,19 @@ export default {
       };
       this.$http.post("/auth/login", data)
         .then((res) => {
-          window.sessionStorage["token"] = JSON.stringify(res.data.token);
-          this.isLoading = true;
-          setTimeout(() => {
-            this.$router.push("/order/list");
-          }, 1000);
-          setTimeout(() => {
-            this.isLoading = false;
-          }, 1500);
+          if(res.data.token){
+            window.sessionStorage["token"] = JSON.stringify(res.data.token);
+            this.isLoading = true;
+            setTimeout(() => {
+              this.$router.push("/order/list");
+            }, 1000);
+            setTimeout(() => {
+              this.isLoading = false;
+            }, 1500);
+          }else if(res.data.error){
+            alert(res.data.error)
+          }
+          
 
           // if (res.data.code == 200) {
           //   if(res.data.status=="success")

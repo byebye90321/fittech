@@ -36,6 +36,7 @@ export default {
             {name: "自家開發管理",url: "/own/lists",icon: "fas fa-briefcase",childrens:[]},
             {name: "委外開發管理",url: "/outsource/lists",icon: "far fa-building",childrens:[]},
             {name: "結束訂單",url: "/completed/lists",icon: "fas fa-calendar-day",childrens:[]},
+            {name: "新增下拉選項",url: "/add/lists",icon: "fas fa-plus",childrens:[]},
 
             // {name: "進度追蹤系統",url: "/order",icon: "fas fa-file-contract",childrens:[
             //   {name: "訂單管理",url: "/order/list",icon: "far fa-folder-open",childrens:[]},

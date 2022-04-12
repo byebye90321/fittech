@@ -113,8 +113,7 @@ export default {
           this.$notify({
               group: 'foo',
               type: 'error',
-              title: '失敗',
-              message:res.data.error
+              title: res.data.error,
           });
           this.info.password=""
           this.info.checkpassword=""

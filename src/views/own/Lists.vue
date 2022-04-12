@@ -253,11 +253,6 @@ export default {
           sortable: false,
         },
         {
-          key: "name",
-          label: "配合者",
-          sortable: false,
-        },
-        {
           key: "develop_status",
           label: "開發狀態",
           sortable: false,

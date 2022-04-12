@@ -269,7 +269,7 @@ export default {
         },
         {
           key: "personnel",
-          label: "開發負責人",
+          label: "配合者",
           sortable: false,
         },
         {
