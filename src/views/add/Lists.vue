@@ -21,8 +21,10 @@
         button-variant="outline-danger"
         v-model="filter.type"
         :options="type_opt"
+        @change="toStatus($event)"
         ></b-form-radio-group>
     </b-form-group>
+
     <CCardBody class="p-0">
       <hr />
       <CCard>
@@ -44,6 +46,11 @@
                 <strong>&nbsp; Loading...</strong>
               </div>
             </template>
+
+            <template v-slot:cell(type)="row">
+              <p>{{row.item.type|typeFilter(type_opt)}}</p>
+            </template>
+
             <template v-slot:empty>
               <div class="text-center my-3">
                 <h4 class="mb-3">尚未發佈任何項目</h4>
@@ -62,10 +69,10 @@
                   <i class="las la-pencil-alt la-lg"></i>&nbsp;
                   <span class="sr-only">操作</span>
                 </template>
-                <b-dropdown-item @click="toEdit(row.item)">
+                <b-dropdown-item @click="toEdit(row.item.cid)">
                   <i class="las la-edit la-lg pr-2"></i> 編輯
                 </b-dropdown-item>
-                <b-dropdown-item @click="checkDel(row.item.id)" >
+                <b-dropdown-item @click="checkDel(row.item.cid)" >
                   <i class="las la-trash-alt la-lg pr-2"></i> 刪除
                 </b-dropdown-item>
               </b-dropdown>
@@ -93,9 +100,9 @@
 
 
 
-    <b-modal id="modal-edit" centered :title="editdata==null?'下拉選項-新增':'下拉選項-編輯'" size="xl" v-model="editModal" hide-footer class="modal" >
+    <b-modal id="modal-edit" centered :title="editId==null?'下拉選項-新增':'下拉選項-編輯'" size="xl" v-model="editModal" hide-footer class="modal" >
         <b-col class="pt-3 pb-3">
-            <edit :data="editdata" :type_opt="type_opt" @saveData="saveData"></edit>
+            <edit :editId="editId" :type_opt="type_opt" @saveData="saveData"></edit>
         </b-col>
     </b-modal>
 
@@ -106,7 +113,7 @@
     </b-modal>
 
     <b-modal id="modal-delete" centered title="刪除選項" size="xl" v-model="deleteModal" hide-footer class="modal" >
-      <p class="py-3">確定刪除選項嗎？資料一經刪除則不可回復！</p>
+      <p class="py-3">確定刪除嗎？資料一經刪除則不可回復！</p>
       <div class="text-center pt-3">
         <button type="button" @click="toDel()" class=""> 
           確定刪除
@@ -132,30 +139,25 @@ export default {
     return {
       //列表
       isBusy: false,
-      dataList: [
-          {id:1,type:'客戶',name:'123公司'},
-          {id:2,type:'材質',name:'木板'},
-          {id:3,type:'廠商',name:'AAA工廠'},
-          {id:4,type:'廠商',name:'BBB工廠'},
-          {id:5,type:'材質',name:'鋼板'},
-          {id:6,type:'客戶',name:'456公司'},
-          
-      ],
+      dataList: [],
       fields: [
         {
           key: "name",
           label: "名稱",
           sortable: true,
+          thStyle: { width: "40%" },
         },
         {
           key: "type",
           label: "類別",
           sortable: true,
+          thStyle: { width: "40%" },
         },
         {
           key: "edit",
           label: "編輯",
           sortable: false,
+          thStyle: { width: "20%" },
         },
       ],
       device: 0,
@@ -170,15 +172,10 @@ export default {
       pageCount: 10,
       totalRows: 10,
 
-      type_opt:[
-          {text:'客戶',value:'客戶'},
-          {text:'材質',value:'材質'},
-          {text:'廠商',value:'廠商'},
-          {text:'全部',value:'全部'},
-      ],
+      type_opt:[],
 
       filter:{
-          type:'全部'
+          type:''
       },
 
 
@@ -188,7 +185,7 @@ export default {
 
       editModal:false,
 
-      editdata:null,
+      editId:null,
 
     };
   },
@@ -196,17 +193,31 @@ export default {
   components:{
       edit
   },
-  created() {
-    // this.getLists(1)
+  filters:{
+    typeFilter:function(val,typeFilter){
 
+      for(var i=0;i<typeFilter.length;i++)
+      {
+        if(typeFilter[i].value==val)
+        {
+
+          return typeFilter[i].text
+        }
+      }
+    },
+  },
+  created() {
+    this.getLists(1)
+    this.getTypeOpt()
   },
   methods: {
     getLists(page){
       this.isBusy = true;
       let data={
-          page:page
+          page:page,
+          type:this.filter.type
       }
-      this.$http.post("/",data)
+      this.$http.post("/getOptList",data)
       .then((res) => {
         console.log(res)
         this.dataList=res.data.lists.data
@@ -227,19 +238,31 @@ export default {
       })  
       
     },
+    getTypeOpt(){
+      this.$http.get("/getTypeOpt")
+      .then((res) => {
+        this.type_opt = res.data.options
+        this.type_opt.push({text:'全部',value:''})
+      })  
+    },
     
     toCreate() {
-        this.editdata = null
+        this.editId = null
         this.editModal=true
     },
     toEdit(val) {
-        this.editdata = val
+        this.editId = val
+        console.log(this.editId)
         this.editModal=true
     },
     saveData(){
       this.editModal=false
       this.getLists(1);
     }, 
+    toStatus(val){
+      this.filter.type = val
+      this.getLists(1)
+    },
     checkDel(id){
       this.delId=id
       this.deleteModal=true
@@ -248,9 +271,9 @@ export default {
       this.deleteModal=false
       this.loadingModal=true
       let data = {
-        id: this.delId,
+        cid: this.delId,
       };
-      this.$http.post("", data)
+      this.$http.post("/delTypeData", data)
       .then((res) => {
         this.loadingModal=false
         this.getLists(1)

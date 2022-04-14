@@ -6,8 +6,8 @@ import router from '../router';
 axios.defaults.timeout = 30000;
 
 
-axios.defaults.baseURL = 'http://5ca7-60-249-112-124.ngrok.io/api';
-Vue.prototype.webURL = "http://5ca7-60-249-112-124.ngrok.io/api"
+axios.defaults.baseURL = 'http://edfd-60-249-112-124.ngrok.io/api';
+Vue.prototype.webURL = "http://edfd-60-249-112-124.ngrok.io/api"
 
 
 // create an axios instance

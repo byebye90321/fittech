@@ -7,7 +7,7 @@
                     分類
                 </CCol >
                 <CCol sm="8" md="10" lg="7">
-                    <b-form-select v-model="info.type" :options="type_opt" text-field="text" value-field="value" required >
+                    <b-form-select v-model="info.type" :options="type_opt" text-field="text" value-field="value" required :disabled="editId!=null">
                         <template #first>
                             <b-form-select-option :value="null" disabled >- 請選擇 -</b-form-select-option >
                         </template>
@@ -45,37 +45,49 @@ import Vue from 'vue'
 export default {
     props:{
         type_opt:Array,
-        editdata:Object,
+        editId:[String,Number],
     },
     data(){
         return{
-            loading:false,
+            loading:true,
             info:{
-                id:null, //id
+                cid:null, //cid
                 name:null, //name
                 type:null, //type
             },
         }
     },
     created(){
-        if(this.editdata!=null){ //編輯帶資料
-            this.info.name = this.editdata.name
-            this.info.type = this.editdata.type
-            this.info.id = this.editdata.id
+        console.log(typeof(this.editId))
+        if(this.editId!=null){ //編輯帶資料
+            this.info.cid = this.editId
+            this.getData()
+        }else{
+            this.loading=false
         }
     },
     methods:{
-        
+        getData(){
+            let data={
+                cid:this.info.cid, 
+            }
+            this.$http.post("/getTypeData", data)
+            .then((res) => {
+                this.loading=false
+                this.info.name = res.data.data.name
+                this.info.type = res.data.data.type
+            })
+        },
         saveData(){
             
             this.loading=true
             
-            if(this.info.id==null){  //新增
+            if(this.info.cid==null){  //新增
                 let data={
                     name:this.info.name, 
                     type:this.info.type, 
                 }
-                this.$http.post("/create", data)
+                this.$http.post("/createType", data)
                 .then((res) => {
                     this.loading=false
                     this.$notify({
@@ -83,15 +95,14 @@ export default {
                         type: 'success',
                         title: '新增成功',
                     });
-                    this.$emit('saveCreate')       
+                    this.$emit('saveData')       
                 })
             }else{  //編輯
                 let data={
-                    id:this.info.id,
+                    cid:this.info.cid,
                     name:this.info.name, 
-                    type:this.info.type, 
                 }
-                this.$http.post("/edit", data)
+                this.$http.post("/saveTypeData", data)
                 .then((res) => {
                     this.loading=false
                     this.$notify({

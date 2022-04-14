@@ -95,6 +95,7 @@ export default {
         return{
             loading:true,
             info:{
+                aluminum_id:"",
                 material_id:"", //材質
                 length:"", //長
                 width:"", //寬
@@ -108,7 +109,7 @@ export default {
     created(){
         this.getData()
         console.log(this.order_id)
-        this.loading=false
+        
     },
     components:{
         "date-picker":DatePicker,
@@ -122,37 +123,66 @@ export default {
             .then((res) => {
                 console.log(res)
                 this.loading=false
-                this.info.material_id=res.data.data.material_id
-                this.info.length=res.data.data.length                        
-                this.info.width=res.data.data.width                        
-                this.info.high=res.data.data.high                        
-                this.info.material=res.data.data.material                        
-                this.info.quantity=res.data.data.quantity                        
-                this.info.unit_price=res.data.data.unit_price                        
+                if(res.data.data!=null){
+                    this.info.aluminum_id = res.data.data.aluminum_id
+                    this.info.material_id=res.data.data.material_id
+                    this.info.length=res.data.data.length                        
+                    this.info.width=res.data.data.width                        
+                    this.info.high=res.data.data.high                        
+                    this.info.material=res.data.data.material                        
+                    this.info.quantity=res.data.data.quantity                        
+                    this.info.unit_price=res.data.data.unit_price  
+                }
+                                      
             })
         },
         saveData(){
             this.loading=true
-            let data={
-                order_id:this.order_id,
-                material_id :this.info.material_id ,
-                length :this.info.length ,
-                width :this.info.width ,
-                high :this.info.high ,
-                material :this.info.material ,
-                quantity :this.info.quantity ,
-                unit_price:this.info.unit_price, 
+            if(this.info.aluminum_id==''){  //新建
+                let data={
+                    order_id:this.order_id,
+                    material_id :this.info.material_id ,
+                    length :this.info.length ,
+                    width :this.info.width ,
+                    high :this.info.high ,
+                    material :this.info.material ,
+                    quantity :this.info.quantity ,
+                    unit_price:this.info.unit_price, 
+                }
+                this.$http.post("/createMaterial", data)
+                .then((res) => {
+                    this.loading=false
+                    this.$notify({
+                        group: 'foo',
+                        type: 'success',
+                        title: '成功',
+                    });
+                    this.$emit('saveMaterial')
+                })
+            }else{  //更新
+                let data={
+                    aluminum_id:this.info.aluminum_id,
+                    order_id:this.order_id,
+                    material_id :this.info.material_id ,
+                    length :this.info.length ,
+                    width :this.info.width ,
+                    high :this.info.high ,
+                    material :this.info.material ,
+                    quantity :this.info.quantity ,
+                    unit_price:this.info.unit_price, 
+                }
+                this.$http.post("/saveMaterialData", data)
+                .then((res) => {
+                    this.loading=false
+                    this.$notify({
+                        group: 'foo',
+                        type: 'success',
+                        title: '成功',
+                    });
+                    this.$emit('saveMaterial')
+                })
             }
-            this.$http.post("/createMaterial", data)
-            .then((res) => {
-                this.loading=false
-                this.$notify({
-                    group: 'foo',
-                    type: 'success',
-                    title: '成功',
-                });
-                this.$emit('saveMaterial')
-            })
+            
         },
     }
 }
