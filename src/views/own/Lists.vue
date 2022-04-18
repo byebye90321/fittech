@@ -173,6 +173,7 @@
             v-model="currPage"
             :pages="paginate.pages"
             :number-of-pages="paginate.maxPage"
+            @input="getLists"
           ></b-pagination-nav>
         </div>
       </b-row>
@@ -372,13 +373,13 @@ export default {
 
         this.paginate = {
           pages: [...Array(resData.last_page)].map(
-            (x, _) => (x = { link: { query: { page: _ + 1 } } })
+            (x, _) => (x = { link: { params: { page: _ + 1 } } })
           ),
           currPage: page, // 停用前端分頁，讓表格永遠顯示後端分頁的第一筆。
           perPage: resData.per_page,
           maxPage: resData.last_page,
-
         }
+        this.currPage = page
       })  
     },
     getCustomerOpt(){
@@ -460,20 +461,21 @@ export default {
         this.filter.item_name='';
         this.filter.reply_date='';
         this.filter.status='';
-        if(this.$route.query.page==undefined){
+        if(this.$route.params.page==undefined){
           this.getLists(1);
         }else{
-          this.getLists(this.$route.query.page);
+          this.getLists(this.$route.params.page);
         }
       }
     },
   },
   watch: {
-    $route(to, from) {
-      if (to.query.page) {
-        this.getLists(to.query.page);
-      }
-    },
+    // $route(to, from) {
+    //   console.log(to,from)
+    //   if (to.query.page) {
+    //     this.getLists(to.query.page);
+    //   }
+    // },
   },
 };
 </script>

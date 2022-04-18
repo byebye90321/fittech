@@ -44,7 +44,7 @@ import Vue from 'vue'
 
 export default {
     props:{
-        type_opt:Array,
+        // type_opt:Array,
         editId:[String,Number],
     },
     data(){
@@ -55,15 +55,17 @@ export default {
                 name:null, //name
                 type:null, //type
             },
+            type_opt:[],
         }
     },
     created(){
         console.log(typeof(this.editId))
+        this.getTypeOpt()
         if(this.editId!=null){ //編輯帶資料
             this.info.cid = this.editId
             this.getData()
         }else{
-            this.loading=false
+            
         }
     },
     methods:{
@@ -77,6 +79,13 @@ export default {
                 this.info.name = res.data.data.name
                 this.info.type = res.data.data.type
             })
+        },
+        getTypeOpt(){
+            this.$http.get("/getTypeOpt")
+            .then((res) => {
+                this.type_opt = res.data.options
+                this.loading=false
+            })  
         },
         saveData(){
             

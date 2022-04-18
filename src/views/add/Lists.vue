@@ -20,7 +20,7 @@
         buttons
         button-variant="outline-danger"
         v-model="filter.type"
-        :options="type_opt"
+        :options="typeFilter_opt"
         @change="toStatus($event)"
         ></b-form-radio-group>
     </b-form-group>
@@ -48,7 +48,7 @@
             </template>
 
             <template v-slot:cell(type)="row">
-              <p>{{row.item.type|typeFilter(type_opt)}}</p>
+              <p>{{row.item.type|typeFilter(typeFilter_opt)}}</p>
             </template>
 
             <template v-slot:empty>
@@ -93,6 +93,7 @@
             v-model="currPage"
             :pages="paginate.pages"
             :number-of-pages="paginate.maxPage"
+            @input="getLists"
           ></b-pagination-nav>
         </div>
       </b-row>
@@ -102,7 +103,7 @@
 
     <b-modal id="modal-edit" centered :title="editId==null?'下拉選項-新增':'下拉選項-編輯'" size="xl" v-model="editModal" hide-footer class="modal" >
         <b-col class="pt-3 pb-3">
-            <edit :editId="editId" :type_opt="type_opt" @saveData="saveData"></edit>
+            <edit :editId="editId" @saveData="saveData"></edit>
         </b-col>
     </b-modal>
 
@@ -172,7 +173,7 @@ export default {
       pageCount: 10,
       totalRows: 10,
 
-      type_opt:[],
+      typeFilter_opt:[],
 
       filter:{
           type:''
@@ -229,20 +230,21 @@ export default {
 
         this.paginate = {
           pages: [...Array(resData.last_page)].map(
-            (x, _) => (x = { link: { query: { page: _ + 1 } } })
+            (x, _) => (x = { link: { params: { page: _ + 1 } } })
           ),
           currPage: page, // 停用前端分頁，讓表格永遠顯示後端分頁的第一筆。
           perPage: resData.per_page,
           maxPage: resData.last_page,
         }
+        this.currPage = page
       })  
       
     },
     getTypeOpt(){
       this.$http.get("/getTypeOpt")
       .then((res) => {
-        this.type_opt = res.data.options
-        this.type_opt.push({text:'全部',value:''})
+        this.typeFilter_opt = res.data.options
+        this.typeFilter_opt.push({text:'全部',value:''})
       })  
     },
     
@@ -283,8 +285,8 @@ export default {
   },
   watch: {
     $route(to, from) {
-      if (to.query.page) {
-        this.getLists(to.query.page);
+      if (to.params.page) {
+        this.getLists(to.params.page);
       }
     },
   },

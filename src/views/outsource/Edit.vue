@@ -7,7 +7,7 @@
                         廠商
                     </CCol>
                     <CCol sm="10" md="10" lg="10">
-                        <b-form-select v-model="info.name" :options="company_opt" text-field="name" value-field="cid" required >
+                        <b-form-select v-model="info.name" :options="company_opt" required >
                             <template #first>
                                 <b-form-select-option :value="null" disabled >- 請選擇 -</b-form-select-option >
                             </template>
@@ -84,7 +84,7 @@ import moment from 'moment'
 export default {
     props:{
         tag_id:Number,
-        company_opt:Array,
+        // company_opt:Array,
         reply_date:String,
     },
     data(){
@@ -97,12 +97,15 @@ export default {
                 estimated_time:"",  //預計交期
                 surfaceTreatment:false, //是否表面處理
             },
+            company_opt:[],
+
         }
     },
     created(){
         // this.getData()
         console.log(this.tag_id)
-        this.loading=false
+        
+        this.getCompany()
     },
     components:{
         "date-picker":DatePicker,
@@ -118,6 +121,14 @@ export default {
     methods:{
         notBeforeToday(date) {
             return date > new Date(this.reply_date);
+        },
+        getCompany(){
+            this.$http.get("/getCompanyOpt")
+            .then((res) => {
+                console.log(res)
+                this.company_opt = res.data.options
+                this.loading=false
+            })
         },
         saveData(){
             if(this.info.estimated_time==""){

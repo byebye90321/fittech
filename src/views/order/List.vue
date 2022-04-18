@@ -47,7 +47,7 @@
             </template>
 
             <template v-slot:cell(customer)="row">
-              <p>{{row.item.customer|customerFilter(customer_opt)}}</p>
+              <p>{{row.item.customer|customerFilter(customerFilter_opt)}}</p>
             </template>
 
             <template v-slot:cell(develop_id)="row">
@@ -106,6 +106,7 @@
             v-model="currPage"
             :pages="paginate.pages"
             :number-of-pages="paginate.maxPage"
+            @input="getLists"
           ></b-pagination-nav>
         </div>
       </b-row>
@@ -238,22 +239,24 @@ export default {
       materialOrderId:"",
 
       customer_opt:[],
+      customerFilter_opt:[],
       develop_opt:[],
       material_opt:[],
+   
     };
   },
   filters: {
     dateFilter:function(date){
       return moment(date).format('YYYY-MM-DD').toString()
     },
-    customerFilter:function(val,customer_opt){
+    customerFilter:function(val,customerFilter_opt){
 
-      for(var i=0;i<customer_opt.length;i++)
+      for(var i=0;i<customerFilter_opt.length;i++)
       {
-        if(customer_opt[i].value==val)
+        if(customerFilter_opt[i].value==val)
         {
 
-          return customer_opt[i].text
+          return customerFilter_opt[i].text
         }
       }
     },
@@ -279,6 +282,7 @@ export default {
   created() {
     this.getLists(1)
     this.getCustomerOpt()
+    this.getCustomerFilterOpt()
     this.getDevelopOpt()
     this.getMaterialOpt()
   },
@@ -300,12 +304,13 @@ export default {
 
         this.paginate = {
           pages: [...Array(resData.last_page)].map(
-            (x, _) => (x = { link: { query: { page: _ + 1 } } })
+            (x, _) => (x = { link: { params: { page: _ + 1 } } })
           ),
           currPage: page, // 停用前端分頁，讓表格永遠顯示後端分頁的第一筆。
           perPage: resData.per_page,
           maxPage: resData.last_page,
         }
+        this.currPage = page
       })  
       
     },
@@ -316,6 +321,14 @@ export default {
             this.customer_opt = res.data.options
         })
     },
+    getCustomerFilterOpt(){
+        this.$http.get("/getCustomerFilter")
+        .then((res) => {
+            console.log(res)
+            this.customerFilter_opt = res.data.options
+        })
+    },
+    
     getDevelopOpt(){
         this.$http.get("/getDevelopOpt")
         .then((res) => {
@@ -330,6 +343,7 @@ export default {
           this.material_opt = res.data.options
       })
     },
+    
     toCreate() {
       this.createModal=true
     },
@@ -381,8 +395,8 @@ export default {
   },
   watch: {
     $route(to, from) {
-      if (to.query.page) {
-        this.getLists(to.query.page);
+      if (to.params.page) {
+        this.getLists(to.params.page);
       }
     },
   },

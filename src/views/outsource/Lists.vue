@@ -116,7 +116,7 @@
             </template>
 
             <template v-slot:cell(name)="row">
-              <p v-if="row.item.personnel!=null">{{row.item.personnel.name}}</p>
+              <p v-if="row.item.personnel!=null">{{row.item.personnel.name|companyFilter(company_opt)}}</p>
               <p v-else class="text-muted">-未設定-</p>
             </template>
             <template v-slot:cell(price)="row">
@@ -174,6 +174,7 @@
             v-model="currPage"
             :pages="paginate.pages"
             :number-of-pages="paginate.maxPage"
+            @input="getLists"
           ></b-pagination-nav>
         </div>
       </b-row>
@@ -181,7 +182,7 @@
 
     <b-modal id="modal-edit" centered title="編輯訂單" size="xl" v-model="editModal" hide-footer class="modal" >
         <b-col class="pt-3 pb-3">
-            <edit :tag_id="editOrderId" :company_opt="company_opt" :reply_date="reply_date" @saveEdit="saveEdit"></edit>
+            <edit :tag_id="editOrderId" :reply_date="reply_date" @saveEdit="saveEdit"></edit>
         </b-col>
     </b-modal>
 
@@ -338,6 +339,16 @@ export default {
         }
       }
     },
+    companyFilter(val,company_opt){
+      for(var i=0;i<company_opt.length;i++)
+      {
+        if(company_opt[i].value==val)
+        {
+
+          return company_opt[i].text
+        }
+      }
+    },
   },
   components:{
     "date-picker":DatePicker,
@@ -374,13 +385,14 @@ export default {
 
         this.paginate = {
           pages: [...Array(resData.last_page)].map(
-            (x, _) => (x = { link: { query: { page: _ + 1 } } })
+            (x, _) => (x = { link: { params: { page: _ + 1 } } })
           ),
           currPage: page, // 停用前端分頁，讓表格永遠顯示後端分頁的第一筆。
           perPage: resData.per_page,
           maxPage: resData.last_page,
 
         }
+        this.currPage = page
       })  
     },
     getCustomerOpt(){
@@ -399,7 +411,7 @@ export default {
         })
     },
     getCompany(){
-      this.$http.get("/getCompany")
+      this.$http.get("/getCompanyFilter")
       .then((res) => {
           console.log(res)
           this.company_opt = res.data.options
@@ -462,10 +474,10 @@ export default {
         this.filter.item_name='';
         this.filter.reply_date='';
         this.filter.status='';
-        if(this.$route.query.page==undefined){
+        if(this.$route.params.page==undefined){
           this.getLists(1);
         }else{
-          this.getLists(this.$route.query.page);
+          this.getLists(this.$route.params.page);
         }
       }
       
@@ -473,8 +485,8 @@ export default {
   },
   watch: {
     $route(to, from) {
-      if (to.query.page) {
-        this.getLists(to.query.page);
+      if (to.params.page) {
+        this.getLists(to.params.page);
       }
     },
   },

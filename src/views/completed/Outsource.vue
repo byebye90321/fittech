@@ -45,7 +45,12 @@
                     委外公司
                 </CCol>
                 <CCol sm="4" md="10" lg="4">
-                    <b-form-input type="text" v-model="info.personnel.name" placeholder="數量" disabled required></b-form-input>
+                    <!-- <b-form-input type="text" v-model="info.personnel.name" placeholder="委外公司" disabled required></b-form-input> -->
+                    <b-form-select v-model="info.personnel.name" :options="company_opt" required disabled>
+                        <template #first>
+                            <b-form-select-option :value="null" disabled >- 請選擇 -</b-form-select-option >
+                        </template>
+                    </b-form-select>
                 </CCol>
             </template>
             <template>
@@ -76,7 +81,7 @@ import Vue           from 'vue'
 export default {
     props:{
         info:Object,
-
+        company_opt:Array
     },
     data(){
         return{

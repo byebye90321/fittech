@@ -111,11 +111,15 @@
             </template>
 
              <template v-slot:cell(leader)="row">
-              <p>{{row.item.personnel.leader}}</p>
+              <p v-if="row.item.develop_id==5">{{row.item.personnel.leader|userFilter(userFilter_opt)}}</p>
+              <p v-else>{{row.item.personnel.leader}}</p>
+              
             </template>
             
             <template v-slot:cell(personnel)="row">
-              <p>{{row.item.personnel.name}}</p>
+              
+              <p v-if="row.item.develop_id==5">{{row.item.personnel.name|companyFilter(company_opt)}}</p>
+              <p v-else>{{row.item.personnel.name}}</p>
             </template>
 
             
@@ -145,10 +149,6 @@
                 {{row.item.expected|expectedFilter(expected_opt)}} <span v-if="row.item.expected!=14">{{Math.abs(row.item.day)}}天</span>
               </p>
             </template>
-            
-
-            
-
 
             <template v-slot:cell(edit)="row">
               <CButton @click="viewInfo(row.item.tag_id,row.item.develop_id)" color="warning">細項</CButton>
@@ -170,6 +170,7 @@
             v-model="currPage"
             :pages="paginate.pages"
             :number-of-pages="paginate.maxPage"
+            @input="getLists"
           ></b-pagination-nav>
         </div>
       </b-row>
@@ -178,13 +179,13 @@
 
    <b-modal id="modal-edit" centered title="自家開發" size="xl" v-model="ownDetailModal" hide-footer class="modal" >
         <b-col class="pt-3 pb-3">
-            <own :info="ownData" :material_opt="material_opt"></own>
+            <own :info="ownData" :material_opt="materialFilter_opt"></own>
         </b-col>
     </b-modal>
 
     <b-modal id="modal-edit" centered title="委外開發" size="xl" v-model="outDetailModal" hide-footer class="modal" >
         <b-col class="pt-3 pb-3">
-            <outsource :info="outData" ></outsource>
+            <outsource :info="outData" :company_opt="company_opt"></outsource>
         </b-col>
     </b-modal>
 
@@ -324,7 +325,9 @@ export default {
         {value: 5, text: "委外開發"}
       ],
       expected_opt:[],
-      material_opt:[],
+      company_opt:[],
+      materialFilter_opt:[],
+      userFilter_opt:[],
 
       ownData:false,
       outData:false,
@@ -382,6 +385,26 @@ export default {
         }
       }
     },
+    companyFilter(val,company_opt){
+      for(var i=0;i<company_opt.length;i++)
+      {
+        if(company_opt[i].value==val)
+        {
+
+          return company_opt[i].text
+        }
+      }
+    },
+    userFilter(val,userFilter_opt){
+      for(var i=0;i<userFilter_opt.length;i++)
+      {
+        if(userFilter_opt[i].id==val)
+        {
+
+          return userFilter_opt[i].name
+        }
+      }
+    },
   },
   components:{
     "date-picker":DatePicker,
@@ -393,7 +416,9 @@ export default {
     this.getCustomerOpt()
     // this.getDevelopOpt()
     this.getExpectedOpt()
-    this.getMaterialOpt()
+    this.getCompany()
+    this.getMaterialFilterOpt()
+    this.getUserFilter()
   },
   methods: {
     getLists(page){
@@ -422,13 +447,14 @@ export default {
 
         this.paginate = {
           pages: [...Array(resData.last_page)].map(
-            (x, _) => (x = { link: { query: { page: _ + 1 } } })
+            (x, _) => (x = { link: { params: { page: _ + 1 } } })
           ),
           currPage: page, // 停用前端分頁，讓表格永遠顯示後端分頁的第一筆。
           perPage: resData.per_page,
           maxPage: resData.last_page,
 
         }
+        this.currPage = page
       })  
     },
     getCustomerOpt(){
@@ -445,12 +471,33 @@ export default {
             this.develop_opt = res.data.options
         })
     },
+    getUserFilter(){
+      this.$http.get("/getUserFilter")
+        .then((res) => {
+            console.log(res)
+            this.userFilter_opt = res.data.options
+        })
+    },
     getExpectedOpt(){
         this.$http.get("/getExpectedOpt")
         .then((res) => {
             console.log(res)
             this.expected_opt = res.data.options
         })
+    },
+    getCompany(){
+      this.$http.get("/getCompanyFilter")
+      .then((res) => {
+          console.log(res)
+          this.company_opt = res.data.options
+      })
+    },
+    getMaterialFilterOpt(){
+      this.$http.get("/getMaterialFilter")
+      .then((res) => {
+          console.log(res)
+          this.materialFilter_opt = res.data.options
+      })
     },
     viewInfo(tag_id,develop_id){
       this.loadingModal=true
@@ -510,13 +557,6 @@ export default {
           }
       })
     },
-    getMaterialOpt(){
-      this.$http.get("/getMaterialOpt")
-      .then((res) => {
-          console.log(res)
-          this.material_opt = res.data.options
-      })
-    },
     saveEdit(){
       this.editModal=false
       this.getLists(1);
@@ -544,18 +584,18 @@ export default {
         this.filter.status='';
         this.filter.expected='';
       
-        if(this.$route.query.page==undefined){
+        if(this.$route.params.page==undefined){
           this.getLists(1);
         }else{
-          this.getLists(this.$route.query.page);
+          this.getLists(this.$route.params.page);
         }
       }
     },
   },
   watch: {
     $route(to, from) {
-      if (to.query.page) {
-        this.getLists(to.query.page);
+      if (to.params.page) {
+        this.getLists(to.params.page);
       }
     },
   },
