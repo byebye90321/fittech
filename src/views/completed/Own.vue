@@ -65,7 +65,12 @@
                     長度
                 </CCol>
                 <CCol sm="4" md="10" lg="3">
-                    <b-form-input type="text" v-model="info.material.length" placeholder="長度" disabled required></b-form-input>
+                    <template v-if="info.material!=null">
+                        <b-form-input type="text" v-model="info.material.length" placeholder="長度" disabled required></b-form-input>
+                    </template>
+                    <template v-else>
+                        <p class="pt-2 text-muted">-無設定-</p>
+                    </template>
                 </CCol>
             </template>
             <template>
@@ -73,7 +78,12 @@
                     寬度
                 </CCol>
                 <CCol sm="4" md="10" lg="3">
-                    <b-form-input type="text" v-model="info.material.width" placeholder="寬度" disabled required></b-form-input>
+                    <template v-if="info.material!=null">
+                        <b-form-input type="text" v-model="info.material.width" placeholder="寬度" disabled required></b-form-input>
+                    </template>
+                    <template v-else>
+                        <p class="pt-2 text-muted">-無設定-</p>
+                    </template>
                 </CCol>
             </template>   
             <template>
@@ -81,7 +91,12 @@
                     高度
                 </CCol>
                 <CCol sm="4" md="10" lg="3">
-                    <b-form-input type="text" v-model="info.material.high" placeholder="高度" disabled required></b-form-input>                 
+                    <template v-if="info.material!=null">
+                        <b-form-input type="text" v-model="info.material.high" placeholder="高度" disabled required></b-form-input>                 
+                    </template>
+                    <template v-else>
+                        <p class="pt-2 text-muted">-無設定-</p>
+                    </template>
                 </CCol>
             </template> 
         </CRow>
@@ -91,7 +106,12 @@
                     數量
                 </CCol>
                 <CCol sm="4" md="10" lg="3">
-                    <b-form-input type="text" v-model="info.material.quantity" placeholder="數量" disabled required></b-form-input>
+                    <template v-if="info.material!=null">
+                        <b-form-input type="text" v-model="info.material.quantity" placeholder="數量" disabled required></b-form-input>
+                    </template>
+                    <template v-else>
+                        <p class="pt-2 text-muted">-無設定-</p>
+                    </template>
                 </CCol>
             </template>
             <template>
@@ -99,7 +119,12 @@
                     單價
                 </CCol>
                 <CCol sm="4" md="10" lg="3">
-                    <b-form-input type="text" v-model="info.material.unit_price" placeholder="單價" disabled required></b-form-input>
+                    <template v-if="info.material!=null">
+                        <b-form-input type="text" v-model="info.material.unit_price" placeholder="單價" disabled required></b-form-input>
+                    </template>
+                    <template v-else>
+                        <p class="pt-2 text-muted">-無設定-</p>
+                    </template>
                 </CCol>
             </template>   
             <template>
@@ -107,7 +132,12 @@
                     材質
                 </CCol>
                 <CCol sm="4" md="10" lg="3">
-                    <b-form-input type="text" v-model="info.material.material" placeholder="材質" disabled required></b-form-input>
+                    <template v-if="info.material!=null">
+                        <b-form-input type="text" v-model="info.material.material" placeholder="材質" disabled required></b-form-input>
+                    </template>
+                    <template v-else>
+                        <p class="pt-2 text-muted">-無設定-</p>
+                    </template>
                 </CCol>
             </template> 
         </CRow>
@@ -118,11 +148,16 @@
                     材料
                 </CCol>
                 <CCol sm="4" md="10" lg="3">
-                    <b-form-select v-model="info.material.material_id" :options="material_opt" text-field="text" value-field="value" disabled required >
-                        <template #first>
-                            <b-form-select-option :value="null" disabled >- 請選擇 -</b-form-select-option >
-                        </template>
-                    </b-form-select>
+                    <template v-if="info.material!=null">
+                        <b-form-select v-model="info.material.material_id" :options="material_opt" text-field="text" value-field="value" disabled required >
+                            <template #first>
+                                <b-form-select-option :value="null" disabled >- 請選擇 -</b-form-select-option >
+                            </template>
+                        </b-form-select>
+                    </template>
+                    <template v-else>
+                        <p class="pt-2 text-muted">-無設定-</p>
+                    </template>
                 </CCol>
             </template>
         </CRow>
