@@ -294,7 +294,6 @@ export default {
       }
       this.$http.post("/getOrderItem",data)
       .then((res) => {
-        console.log(res)
         this.dataList=res.data.lists.data
         this.isBusy = false;
 
@@ -317,14 +316,12 @@ export default {
     getCustomerOpt(){
         this.$http.get("/getCustomerOpt")
         .then((res) => {
-            console.log(res)
             this.customer_opt = res.data.options
         })
     },
     getCustomerFilterOpt(){
         this.$http.get("/getCustomerFilter")
         .then((res) => {
-            console.log(res)
             this.customerFilter_opt = res.data.options
         })
     },
@@ -332,14 +329,12 @@ export default {
     getDevelopOpt(){
         this.$http.get("/getDevelopOpt")
         .then((res) => {
-            console.log(res)
             this.develop_opt = res.data.options
         })
     },
     getMaterialOpt(){
       this.$http.get("/getMaterialOpt")
       .then((res) => {
-          console.log(res)
           this.material_opt = res.data.options
       })
     },

@@ -114,7 +114,6 @@ export default {
     },
     created(){
         this.getData()
-        console.log(this.order_id)
     },
     components:{
         "date-picker":DatePicker,
@@ -126,19 +125,17 @@ export default {
             }
             this.$http.post("/getOrderData", data)
             .then((res) => {
-                console.log(res)
-                        this.loading=false
-                        this.info.customer=res.data.data[0].customer
-                        this.info.order_num=res.data.data[0].order_num 
-                        this.info.order_date=res.data.data[0].order_date 
-                        this.info.item_num=res.data.data[0].item_num
-                        this.info.item_name=res.data.data[0].item_name
-                        this.info.quantity=res.data.data[0].quantity
-                        this.info.pre_delivery_data=res.data.data[0].pre_delivery_data
-                        this.info.reply_date=res.data.data[0].reply_date
-                        // this.info.develop_id=res.data.data[0].develop_id
-
-                   
+                this.loading=false
+                this.info.customer=res.data.data[0].customer
+                this.info.order_num=res.data.data[0].order_num 
+                this.info.order_date=res.data.data[0].order_date 
+                this.info.item_num=res.data.data[0].item_num
+                this.info.item_name=res.data.data[0].item_name
+                this.info.quantity=res.data.data[0].quantity
+                this.info.pre_delivery_data=res.data.data[0].pre_delivery_data
+                this.info.reply_date=res.data.data[0].reply_date
+                // this.info.develop_id=res.data.data[0].develop_id
+    
             })
         },
         saveData(){

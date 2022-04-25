@@ -375,7 +375,6 @@ export default {
       }
       this.$http.post("/getOutsourceOrderItem",data)
       .then((res) => {
-        console.log(res)
         this.dataList=res.data.lists.data
         this.isBusy = false;
 
@@ -398,14 +397,12 @@ export default {
     getCustomerOpt(){
         this.$http.get("/getCustomerOpt")
         .then((res) => {
-            console.log(res)
             this.customer_opt = res.data.options
         })
     },
     getDevelopStatusOpt(){
         this.$http.get("/getDevelopStatusOpt")
         .then((res) => {
-            console.log(res)
             this.status_opt = res.data.options
             this.status_opt.splice((this.status_opt.length-1),1)
         })
@@ -413,7 +410,6 @@ export default {
     getCompany(){
       this.$http.get("/getCompanyFilter")
       .then((res) => {
-          console.log(res)
           this.company_opt = res.data.options
       })
     },
@@ -433,7 +429,6 @@ export default {
       }
       this.$http.post("/confirm",data)
       .then((res) => {
-          console.log(res)
           this.loadingModal=false
           if(res.data.status=='success'){
             this.$notify({

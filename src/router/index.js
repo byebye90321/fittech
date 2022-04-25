@@ -35,10 +35,10 @@ function configRoutes() {
             component: () => import('@/views/pages/Login.vue'),
         },
         {
-            path: '/order',
+            path: '/order/list',
             name: '進度追蹤系統',
             component: () => import('@/framework/Layout.vue'),
-            redirect: '/icons/coreui-icons',
+            redirect: '/order/list',
             children: [
               {
                 path: '/order/list',

@@ -59,7 +59,6 @@ export default {
         }
     },
     created(){
-        console.log(typeof(this.editId))
         this.getTypeOpt()
         if(this.editId!=null){ //編輯帶資料
             this.info.cid = this.editId

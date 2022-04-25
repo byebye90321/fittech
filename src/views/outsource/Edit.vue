@@ -103,7 +103,6 @@ export default {
     },
     created(){
         // this.getData()
-        console.log(this.tag_id)
         
         this.getCompany()
     },
@@ -125,7 +124,6 @@ export default {
         getCompany(){
             this.$http.get("/getCompanyOpt")
             .then((res) => {
-                console.log(res)
                 this.company_opt = res.data.options
                 this.loading=false
             })

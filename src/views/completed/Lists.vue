@@ -437,7 +437,6 @@ export default {
       }
       this.$http.post("/getCompletedItem",data)
       .then((res) => {
-        console.log(res)
         this.dataList=res.data.lists.data
         this.isBusy = false;
 
@@ -458,44 +457,38 @@ export default {
       })  
     },
     getCustomerOpt(){
-        this.$http.get("/getCustomerOpt")
+        this.$http.get("/getCustomerFilter ")
         .then((res) => {
-            console.log(res)
             this.customer_opt = res.data.options
         })
     },
     getDevelopOpt(){
         this.$http.get("/getDevelopOpt")
         .then((res) => {
-            console.log(res)
             this.develop_opt = res.data.options
         })
     },
     getUserFilter(){
       this.$http.get("/getUserFilter")
         .then((res) => {
-            console.log(res)
             this.userFilter_opt = res.data.options
         })
     },
     getExpectedOpt(){
         this.$http.get("/getExpectedOpt")
         .then((res) => {
-            console.log(res)
             this.expected_opt = res.data.options
         })
     },
     getCompany(){
       this.$http.get("/getCompanyFilter")
       .then((res) => {
-          console.log(res)
           this.company_opt = res.data.options
       })
     },
     getMaterialFilterOpt(){
       this.$http.get("/getMaterialFilter")
       .then((res) => {
-          console.log(res)
           this.materialFilter_opt = res.data.options
       })
     },
@@ -507,7 +500,6 @@ export default {
       }
       this.$http.post("/getDetail",data)
         .then((res) => {
-            console.log(res)
             this.loadingModal=false
       
             //自家開發
@@ -539,7 +531,6 @@ export default {
       }
       this.$http.post("/confirm",data)
       .then((res) => {
-          console.log(res)
           this.loadingModal=false
           if(res.data.status=='success'){
             this.$notify({

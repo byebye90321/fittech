@@ -51,7 +51,6 @@ export default {
     },
     created(){
         // this.getData()
-        console.log(this.tag_id)
         this.loading=false
     },
     components:{

@@ -220,7 +220,6 @@ export default {
       }
       this.$http.post("/getOptList",data)
       .then((res) => {
-        console.log(res)
         this.dataList=res.data.lists.data
         this.isBusy = false;
 
@@ -254,7 +253,6 @@ export default {
     },
     toEdit(val) {
         this.editId = val
-        console.log(this.editId)
         this.editModal=true
     },
     saveData(){

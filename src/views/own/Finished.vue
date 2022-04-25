@@ -90,7 +90,6 @@ export default {
     },
     created(){
         // this.getData()
-        console.log(this.tag_id)
         this.loading=false
     },
     components:{
@@ -103,7 +102,6 @@ export default {
             }
             this.$http.post("/getOrderData", data)
             .then((res) => {
-                console.log(res)
                 this.loading=false
                 this.info.client=res.data.data[0].client
                 this.info.user=res.data.data[0].user

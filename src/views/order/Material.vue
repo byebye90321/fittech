@@ -107,9 +107,7 @@ export default {
         }
     },
     created(){
-        this.getData()
-        console.log(this.order_id)
-        
+        this.getData()        
     },
     components:{
         "date-picker":DatePicker,
@@ -121,7 +119,6 @@ export default {
             }
             this.$http.post("/getMaterial", data)
             .then((res) => {
-                console.log(res)
                 this.loading=false
                 if(res.data.data!=null){
                     this.info.aluminum_id = res.data.data.aluminum_id

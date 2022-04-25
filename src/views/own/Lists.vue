@@ -363,7 +363,6 @@ export default {
       }
       this.$http.post("/getOwnOrderItem",data)
       .then((res) => {
-        console.log(res)
         this.dataList=res.data.lists.data
         this.isBusy = false;
 
@@ -385,14 +384,12 @@ export default {
     getCustomerOpt(){
         this.$http.get("/getCustomerOpt")
         .then((res) => {
-            console.log(res)
             this.customer_opt = res.data.options
         })
     },
     getDevelopStatusOpt(){
         this.$http.get("/getDevelopStatusOpt")
         .then((res) => {
-            console.log(res)
             this.status_opt = res.data.options
             this.status_opt.splice((this.status_opt.length-1),1)
         })
@@ -400,7 +397,6 @@ export default {
     getMaterialOpt(){
       this.$http.get("/getMaterialOpt")
       .then((res) => {
-          console.log(res)
           this.material_opt = res.data.options
       })
     },
@@ -420,7 +416,6 @@ export default {
       }
       this.$http.post("/confirm",data)
       .then((res) => {
-          console.log(res)
           this.loadingModal=false
           if(res.data.status=='success'){
             this.$notify({
@@ -471,7 +466,6 @@ export default {
   },
   watch: {
     // $route(to, from) {
-    //   console.log(to,from)
     //   if (to.query.page) {
     //     this.getLists(to.query.page);
     //   }
