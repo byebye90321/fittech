@@ -95,7 +95,7 @@ export default {
     getUserData(){
         this.$http.get("/auth/me")
         .then((res) => {
-            console.log(res)
+            
             this.user_name = res.data.name
         }) 
     },
